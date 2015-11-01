@@ -1,0 +1,93 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+       <ImageButton
+           android:id="@+id/btn_list"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           
+           android:src="@drawable/back"/>
+
+       <TextView
+           android:id="@+id/title"
+           android:layout_weight="1"
+           android:gravity="center"
+           android:layout_gravity="center"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="20sp"
+           android:text="제목"/>
+
+    </LinearLayout>
+	
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="6"
+       android:orientation="vertical" >
+   </LinearLayout>
+	
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:gravity="center"
+       android:orientation="vertical" >
+
+       <SeekBar
+           android:id="@+id/playerBar"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+
+       <LinearLayout
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content" >
+
+           <TextView
+               android:id="@+id/text_current"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="현재재생구간" />
+
+           <TextView
+               android:id="@+id/text_alltime"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="right"
+               android:text="총재생길이" />
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center" >
+           <ImageButton
+               android:id="@+id/btn_fast"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               
+               android:src="@drawable/ic_fast" />
+           <ImageButton
+               android:id="@+id/btn_play"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               
+               android:src="@drawable/ic_play" />
+           <ImageButton
+               android:id="@+id/btn_fast_foward"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+              
+               android:src="@drawable/ic_fast_forward" />
+       </LinearLayout>
+
+   </LinearLayout>
+
+</LinearLayout>
