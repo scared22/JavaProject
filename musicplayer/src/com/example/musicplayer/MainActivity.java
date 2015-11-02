@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	private ViewPager mPager;
+	public static Context mContext;
 	Button btn_song,btn_artist,btn_album,btn_folder;
 	int Max_PAGE = 4;
 	Fragment cur_fragment = new Fragment();
@@ -32,6 +34,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		btn_album.setOnClickListener(this);
 		btn_folder = (Button)findViewById(R.id.btn_folder);
 		btn_folder.setOnClickListener(this);
+		//
+		mContext=this;
 	}
 //	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {

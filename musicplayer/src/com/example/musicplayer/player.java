@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
-	int cur_min,cur_sec,threadkill=0;
+	int threadkill=0,pos;
 	public static Context mContext;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar;
@@ -51,6 +51,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			Intent intent1 = getIntent();
 			String temp = intent1.getStringExtra("paths");
 			String subtitle = intent1.getStringExtra("titles");
+			pos = intent1.getIntExtra("positions", -1);
 			title.setText(subtitle);
 			int start = intent1.getIntExtra("start", 0);
 			if(start==1)
@@ -60,23 +61,20 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				mBinder.fileopen(temp);
 				Playerseekbar.setMax(mBinder.musicduration());
 				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
-				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,cur_sec=mBinder.current()%60));
+				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
 				btn_test();
 			}
 		}
 		 catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		 
-		 
-		 
 	}
 	public void seeking()
 	{
 		runOnUiThread(new Runnable() {
 			public void run() {
 				try {
-					text_current.setText(String.format("%02d:%02d",mBinder.current()/60,cur_sec=mBinder.current()%60));
+					text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
 					Playerseekbar.setProgress(mBinder.current());
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -131,7 +129,10 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			e.printStackTrace();
 		}
 	}
-	
+	public void songchange()
+	{
+		
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -158,10 +159,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		if(v.getId()==R.id.btn_play)
 			btn_test();
 		if(v.getId()==R.id.btn_list)
-		{
-			Intent intent = new Intent(player.this,MainActivity.class);
-			startActivity(intent);
-		}
+			finish();
 	}
 	
 	@Override

@@ -46,10 +46,20 @@ public class MyService extends Service{
 							temp = bufferengine(bytes);
 							track.write(bytes, 0, temp);
 							currenttime=gettime();
+							
+						}
+						if(temp==0)
+						{
+							try {
+								mBinder.Release();
+							} catch (RemoteException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				};
 				Playthread.start();
+				
 		}
 		@Override
 		public void pause(IMyServiceCallback callback) throws RemoteException {
