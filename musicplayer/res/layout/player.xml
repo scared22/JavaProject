@@ -12,7 +12,7 @@
            android:id="@+id/btn_list"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           
+           android:background="#00ff0000"
            android:src="@drawable/back"/>
 
        <TextView
@@ -72,16 +72,18 @@
                android:id="@+id/btn_fast"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               
+               android:background="#00ff0000"
                android:src="@drawable/ic_fast" />
            <ImageButton
                android:id="@+id/btn_play"
+               android:background="#00ff0000"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                
                android:src="@drawable/ic_play" />
            <ImageButton
                android:id="@+id/btn_fast_foward"
+               android:background="#00ff0000"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
               
