@@ -2,9 +2,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-	<ListView
-	    android:id="@+id/songlist"
+	<FrameLayout
 	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/frame1" >
+	<ListView 
+	    android:id="@+id/songlist" 
+	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent"
-	    android:background="#000080"/>
+	     android:background="#000080">
+	</ListView>
+	</FrameLayout>
+
 </LinearLayout>

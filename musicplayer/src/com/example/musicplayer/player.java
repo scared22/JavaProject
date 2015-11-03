@@ -11,25 +11,26 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
-	int threadkill=0,pos;
+	int threadkill=0,pos,changecheck=0,updown=1;
 	public static Context mContext;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar;
-	ImageButton btn_play,btn_list;
+	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast;
 	TextView text_current,text_alltime,title;
+	String temp,subtitle;
 	private IMyService mBinder = null;
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
 		public void callback(final int num) throws RemoteException {
+			if(num==3)
+				songchange();
 		}
 	};
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -47,23 +48,25 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	};
 	public void setting()
 	{
-		try {
-			Intent intent1 = getIntent();
-			String temp = intent1.getStringExtra("paths");
-			String subtitle = intent1.getStringExtra("titles");
-			pos = intent1.getIntExtra("positions", -1);
-			title.setText(subtitle);
-			int start = intent1.getIntExtra("start", 0);
-			if(start==1)
+		
+		try {		
+			if(changecheck==0)
 			{
-				if(mBinder.PlayingCount()!=0)
-					mBinder.Release();
-				mBinder.fileopen(temp);
-				Playerseekbar.setMax(mBinder.musicduration());
-				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
-				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
-				btn_test();
+				Intent intent1 = getIntent();
+				temp = intent1.getStringExtra("paths");
+				subtitle = intent1.getStringExtra("titles");
+				pos = intent1.getIntExtra("positions", -1);
+				title.setText(subtitle);
 			}
+			else
+				changecheck=0;
+			if(mBinder.PlayingCount()!=0)
+				mBinder.Release();
+			mBinder.fileopen(temp);
+			Playerseekbar.setMax(mBinder.musicduration());
+			text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
+			text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
+			btn_test();
 		}
 		 catch (RemoteException e) {
 			e.printStackTrace();
@@ -131,7 +134,16 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	}
 	public void songchange()
 	{
-		
+		Cursorquery qr = new Cursorquery(mContext);
+		Log.d(""+pos, "변경전");
+		qr.songlist(pos,updown);
+		temp=qr.path;
+		subtitle=qr.title;
+		changecheck=1;
+		pos = qr.position;
+		Log.d(""+pos, "변경후");
+		title.setText(subtitle);
+		setting();
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +154,10 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		btn_play.setOnClickListener(this);
 		btn_list = (ImageButton)findViewById(R.id.btn_list);
 		btn_list.setOnClickListener(this);
+		btn_fast = (ImageButton)findViewById(R.id.btn_fast);
+		btn_fast.setOnClickListener(this);
+		btn_fast_foward = (ImageButton)findViewById(R.id.btn_fast_foward);
+		btn_fast_foward.setOnClickListener(this);
 		text_alltime = (TextView)findViewById(R.id.text_alltime);
 		text_current = (TextView)findViewById(R.id.text_current);
 		Playerseekbar = (SeekBar)findViewById(R.id.playerBar);
@@ -160,6 +176,16 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			btn_test();
 		if(v.getId()==R.id.btn_list)
 			finish();
+		if(v.getId()==R.id.btn_fast)
+		{
+			updown=0;
+			songchange();
+		}
+		if(v.getId()==R.id.btn_fast_foward)
+		{
+			updown=1;
+			songchange();
+		}
 	}
 	
 	@Override

@@ -14,8 +14,8 @@ import android.util.Log;
 public class MyService extends Service{
 	int currenttime,temp=1;
 	Thread Playthread;
-	boolean opencheck=false,mPlayjudge=false,seekingcheck=false;
-	int readframe_check=1,bufSize,count=0;
+	boolean opencheck=false,mPlayjudge=false;
+	int readframe_check=1,bufSize,count=0,end=0;
 	private AudioTrack track;
 	private FileOutputStream os;
 	short[] bytes;
@@ -31,7 +31,7 @@ public class MyService extends Service{
 	};
 	IMyService.Stub mBinder = new IMyService.Stub() {
 		@Override
-		public void play(IMyServiceCallback callback) throws RemoteException {
+		public void play(final IMyServiceCallback callback) throws RemoteException {
 			//¹ÂÁ÷ ½ºÅ¸Æ®
 			mPlayjudge=true;
 			count++;
@@ -45,13 +45,12 @@ public class MyService extends Service{
 						{
 							temp = bufferengine(bytes);
 							track.write(bytes, 0, temp);
-							currenttime=gettime();
-							
+							currenttime=gettime();	
 						}
 						if(temp==0)
 						{
 							try {
-								mBinder.Release();
+								callback.callback(3);
 							} catch (RemoteException e) {
 								e.printStackTrace();
 							}
@@ -106,7 +105,6 @@ public class MyService extends Service{
 			track.release();
 			ffmpegRelease();
 			opencheck=false;
-			seekingcheck=true;
 			Playthread=null;
 			track=null;
 			bytes=null;
@@ -126,7 +124,6 @@ public class MyService extends Service{
 	{
 		Log.i("superdroid", "onUnBind");
 		return super.onUnbind(intent);
-		//return true;
 	};
 	@Override
 	public void onDestroy()

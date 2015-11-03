@@ -1,7 +1,5 @@
 package com.example.musicplayer;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -43,11 +41,8 @@ public class song extends Fragment {
 			MediaStore.Audio.Media.DURATION};
 		musiccursor= cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, sortOrder);
 		myAdapter = new MyCursorAdapter(getContext(), musiccursor);
-		
 		//Log.d(""+musiccursor.getCount(), "입니다.");
-		final String TAG1 ="1";
-		android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
-		android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();		
+		
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saavedInstanceState)
@@ -59,30 +54,17 @@ public class song extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				musiccursor.moveToPosition(position);
+				Log.d(""+position, "입니다.");
 				String path = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
 				String title = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
 				//player에게  파일 경로를 넘긴다
 				intent1 = new Intent(getContext(),player.class);
 				intent1.putExtra("paths", path.toString());
-				intent1.putExtra("start", 1);
 				intent1.putExtra("titles", title.toString());
 				intent1.putExtra("positions", position);
 				startActivity(intent1);
 			}
 		});
 		return layout;
-	}
-	public void Nextsong(int position)
-	{
-		if(position+1<=musiccursor.getCount())
-			musiccursor.moveToPosition(position+1);
-		else
-			musiccursor.moveToPosition(1);
-		String path = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-		String title = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));	
-		intent1.putExtra("paths", path.toString());
-		intent1.putExtra("start", 1);
-		intent1.putExtra("titles", title.toString());
-		intent1.putExtra("positions", position);
 	}
 }
