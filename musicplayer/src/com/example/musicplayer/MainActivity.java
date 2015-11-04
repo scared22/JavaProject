@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,6 +34,43 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		btn_album.setOnClickListener(this);
 		btn_folder = (Button)findViewById(R.id.btn_folder);
 		btn_folder.setOnClickListener(this);
+		mPager.setOnPageChangeListener(new OnPageChangeListener() {			
+			@Override
+			public void onPageSelected(int position) {
+				btn_song.setSelected(false);
+				btn_album.setSelected(false);
+				btn_artist.setSelected(false);
+				btn_folder.setSelected(false);
+				switch(position)
+				{
+				case 0:
+					btn_song.setSelected(true);
+					break;
+				case 1:
+				{
+					Log.d(""+position, "입니다.");
+					btn_album.setSelected(true);
+					break;
+				}
+				case 2:
+				{
+					Log.d(""+position, "입니다.");
+					btn_artist.setSelected(true);
+					break;
+				}
+				case 3:
+					btn_folder.setSelected(true);
+					break;
+				}
+			}
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+		});
+		btn_song.setSelected(true);
 	}
 //	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {
