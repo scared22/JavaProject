@@ -3,10 +3,10 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import java.io.FileOutputStream;
-import java.util.Arrays;
-
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -41,24 +41,22 @@ public class MyService extends Service{
 					@Override
 					public void run() {
 						track.play();
-						while((temp!=0) && (readframe_check==1))
+						do
 						{
 							temp = bufferengine(bytes);
 							track.write(bytes, 0, temp);
 							currenttime=gettime();	
-						}
+						}while((temp!=0) && (readframe_check==1));
 						if(temp==0)
 						{
-							try {
-								callback.callback(3);
-							} catch (RemoteException e) {
-								e.printStackTrace();
-							}
+							Log.d("리드프레임"+readframe_check+"temp값"+temp, "입니다.");
+							//브로드캐스트 보냄
+							Intent intent = new Intent("endsong");
+							sendBroadcast(intent);
 						}
 					}
 				};
-				Playthread.start();
-				
+				Playthread.start();	
 		}
 		@Override
 		public void pause(IMyServiceCallback callback) throws RemoteException {
@@ -88,6 +86,7 @@ public class MyService extends Service{
 		}
 		@Override
 		public void fileopen(String temp) throws RemoteException {
+			Log.d(""+opencheck, "입니다.");
 			if(opencheck==false)
 			{
 				createEngine();
@@ -107,6 +106,7 @@ public class MyService extends Service{
 			opencheck=false;
 			Playthread=null;
 			track=null;
+			bufSize=0;
 			bytes=null;
 		}
 		@Override

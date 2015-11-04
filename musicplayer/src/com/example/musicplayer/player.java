@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -15,7 +16,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-
+import android.content.BroadcastReceiver;
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
 	int threadkill=0,pos,changecheck=0,updown=1;
@@ -29,8 +30,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
 		public void callback(final int num) throws RemoteException {
-			if(num==3)
-				songchange();
 		}
 	};
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -46,9 +45,22 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			setting();
 		}
 	};
+	//broadcast
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			Log.d(action, "입니다.");
+			if(action=="endsong")
+			{
+				action=null;
+				songchange();
+			}
+		}
+	};
+	//
 	public void setting()
-	{
-		
+	{	
 		try {		
 			if(changecheck==0)
 			{
@@ -143,6 +155,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		pos = qr.position;
 		Log.d(""+pos, "변경후");
 		title.setText(subtitle);
+		updown=1;
 		setting();
 	}
 	@Override
@@ -168,6 +181,9 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
 		startService(ServiceIntent);
 		Playerseekbar.setOnSeekBarChangeListener(this);
+		//브로드캐스트 리시버 등록
+		IntentFilter Filter = new IntentFilter("endsong");        
+		registerReceiver(receiver, Filter);
 	}
 	@Override
 	public void onClick(View v)
@@ -216,5 +232,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		super.onDestroy();
 		unbindService(mConnection);
 	}
+	
 }
 

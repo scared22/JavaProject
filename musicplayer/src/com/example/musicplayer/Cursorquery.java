@@ -27,13 +27,15 @@ public class Cursorquery {
 				MediaStore.Audio.AudioColumns.DATA,
 				MediaStore.Audio.Media.DURATION};
 		db=cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, null);
-		if(pos<db.getCount()&&set==1)
+		if(pos<db.getCount()-1&&set==1)
 			pos++;
 		else if(pos>0 && set==0)
 			pos--;
 		else if(pos==0)
 			pos=db.getCount()-1;
-		else
+		else if(pos==db.getCount()-1 && set==1)
+			pos=0;
+		else 
 			pos=0;
 		db.moveToPosition(pos);
 		position = pos;
