@@ -222,6 +222,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		try {
 			mBinder.getvalue(curprogress);
 			seekcheck=false;
+			if(mBinder.playjudge()==false)
+				btn_play.setImageResource(R.drawable.ic_pause);
 			mBinder.play(mCallback);
 			servicethread();
 		} catch (RemoteException e) {
