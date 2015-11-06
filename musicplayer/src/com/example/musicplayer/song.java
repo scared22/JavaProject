@@ -40,9 +40,7 @@ public class song extends Fragment {
 			MediaStore.Audio.AudioColumns.DATA,
 			MediaStore.Audio.Media.DURATION};
 		musiccursor= cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, sortOrder);
-		myAdapter = new MyCursorAdapter(getContext(), musiccursor);
-		//Log.d(""+musiccursor.getCount(), "¿‘¥œ¥Ÿ.");
-		
+		myAdapter = new MyCursorAdapter(getContext(), musiccursor,1);
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saavedInstanceState)
@@ -62,6 +60,8 @@ public class song extends Fragment {
 				intent1.putExtra("paths", path.toString());
 				intent1.putExtra("titles", title.toString());
 				intent1.putExtra("positions", position);
+				int set = 1;
+				intent1.putExtra("starts", set);
 				startActivity(intent1);
 			}
 		});

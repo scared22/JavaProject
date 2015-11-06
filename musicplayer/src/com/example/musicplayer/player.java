@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.content.BroadcastReceiver;
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
-	int threadkill=0,pos,changecheck=0,updown=1;
+	int threadkill=0,pos,changecheck=0,updown=1,start;
 	public static Context mContext;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar;
@@ -66,6 +66,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			{
 				Intent intent1 = getIntent();
 				temp = intent1.getStringExtra("paths");
+				start = intent1.getIntExtra("starts", 0);
 				subtitle = intent1.getStringExtra("titles");
 				pos = intent1.getIntExtra("positions", -1);
 				title.setText(subtitle);
@@ -148,13 +149,21 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	{
 		Cursorquery qr = new Cursorquery(mContext);
 		Log.d(""+pos, "변경전");
-		qr.songlist(pos,updown);
-		temp=qr.path;
-		subtitle=qr.title;
-		changecheck=1;
-		pos = qr.position;
-		Log.d(""+pos, "변경후");
+		if(start==1)
+		{
+			qr.songlist(pos,updown);
+			temp=qr.path;
+			subtitle=qr.title;
+			pos = qr.position;
+		}
+		if(start==2)
+		{
+			pos = ((songproperties)songproperties.mContext).getpos(pos, updown);
+			temp = ((songproperties)songproperties.mContext).getpath(pos);
+			subtitle = ((songproperties)songproperties.mContext).gettitle(pos);
+		}
 		title.setText(subtitle);
+		changecheck=1;
 		updown=1;
 		setting();
 	}

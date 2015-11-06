@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/properties_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+         	android:background="#00ff0000"
+            android:src="@drawable/ic_back"/>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/properties_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="TextView"    
+                android:textSize="25sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+	    android:layout_width="match_parent"
+	    android:layout_height="3dp"
+	    android:background="#FF00FF"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/properties_images"
+            android:layout_weight="2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+        <ListView 
+	    	android:id="@+id/properties_list" 
+	    	 android:background="#000080"
+	    	android:layout_width="match_parent" 
+	    	android:layout_height="match_parent"/>
+    	</LinearLayout>
+
+</LinearLayout>
