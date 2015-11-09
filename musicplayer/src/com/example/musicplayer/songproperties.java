@@ -97,6 +97,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		String path = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
 		String title = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));	
 		Intent intent2 = new Intent(this,player.class);
+		intent2.putExtra("starts", 2);
 		intent2.putExtra("paths", path.toString());
 		intent2.putExtra("titles",title.toString());
 		intent2.putExtra("positions", position);
