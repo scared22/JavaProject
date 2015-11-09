@@ -1,8 +1,16 @@
 package com.example.musicplayer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.example.musicplayer.R.drawable;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
 import android.util.Log;
@@ -13,12 +21,12 @@ public class Cursorquery {
 	ContentResolver cr;
 	public String path,title;
 	public static Context mContext;
+	String[] cursorColumns;
 	public Cursorquery(Context c) {
 		mContext=c;
 	}
 	public void songlist(int pos ,int set)
-	{
-		String[] cursorColumns;
+	{	
 		cr = mContext.getContentResolver();
 		cursorColumns = new String[]{
 				MediaStore.Audio.Media._ID,

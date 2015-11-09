@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import com.example.musicplayer.R.drawable;
+import android.R.interpolator;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
@@ -24,10 +25,12 @@ import android.widget.TextView;
 @SuppressWarnings("unused")
 public class MyCursorAdapter extends CursorAdapter {
 	int jari;
+	Context mContext;
 	@SuppressWarnings("deprecation")
 	public MyCursorAdapter(Context context, Cursor c, int pos) {
 		super(context, c);
 		jari = pos;
+		mContext = context;
 	}
 
 	@Override
@@ -61,16 +64,8 @@ public class MyCursorAdapter extends CursorAdapter {
 			//이미지 처리
 			int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
 			albumArt = cursor.getString(albumartIndex);
-			if(albumArt != null)
-			{
-				try{
-					File artWorkFile = new File(albumArt);
-					InputStream in = new FileInputStream(artWorkFile);
-					Drawable d = Drawable.createFromStream(in, null);
-					album.setImageDrawable(d);	
-				}catch(IOException e){
-				}
-			}
+			if(getImage(albumArt) != null)
+				album.setImageDrawable(getImage(albumArt));	
 			else
 				album.setImageResource(R.drawable.noimages);
 			//나머지 처리
@@ -78,6 +73,40 @@ public class MyCursorAdapter extends CursorAdapter {
 			album_title.setText(title);
 			songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 			album_artist.setText(songcount);
+		}
+		if(jari == 3)
+		{
+			TextView artist_name;
+			artist_name = (TextView)view.findViewById(R.id.artist_name);
+			String artisttitle;
+			artisttitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
+			artist_name.setText(artisttitle);
+		}
+		if(jari == 31)
+		{
+			TextView list_item2_title,list_item2_duration;
+			ImageView item_list2_image;
+			String title,duration,albumArt,songgetImage;
+			Cursorquery csq = new Cursorquery(mContext);
+			int time;			
+			//셋팅
+			list_item2_title = (TextView)view.findViewById(R.id.list_item2_title);
+			title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+			list_item2_title.setText(title);
+			list_item2_duration = (TextView)view.findViewById(R.id.list_item2_duration);
+			duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+			time = Integer.parseInt(duration);
+			list_item2_duration.setText(String.format("%d분%d초", (time/60000)%60000,(time%60000)/1000));
+			item_list2_image = (ImageView)view.findViewById(R.id.list_item2_songimage);
+			songgetImage = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+			final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
+			Log.d("값"+Long.parseLong(songgetImage), "갑보자");
+			Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(songgetImage));
+			Log.d(""+uri, "입니다.");
+			if(uri != null)
+				item_list2_image.setImageURI(uri);
+			else
+				item_list2_image.setImageResource(R.drawable.noimages);
 		}
 	}
 
@@ -95,9 +124,33 @@ public class MyCursorAdapter extends CursorAdapter {
 			View v = inflater.inflate(R.layout.album_list_item1, null);
 			return v;
 		}
+		if(jari == 3)
+		{
+			View v = inflater.inflate(R.layout.artist_custom, null);
+			return v;
+		}
+		if(jari == 31)
+		{
+			View v = inflater.inflate(R.layout.list_item2, null);
+			return v;
+		}
 		else
 			return null;
-		
 	}
-
+	//이미지콜
+	public Drawable getImage(String albumArt)
+	{
+		Drawable d;
+		if(albumArt != null)
+		{
+			try{
+				File artWorkFile = new File(albumArt);
+				InputStream in = new FileInputStream(artWorkFile);
+				d = Drawable.createFromStream(in, null);			
+				return d;	
+			}catch(IOException e){
+			}
+		}
+		return null;
+	}
 }
