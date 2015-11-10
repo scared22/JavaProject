@@ -5,12 +5,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+         android:background="#ffffff">
 
         <ImageButton
             android:id="@+id/properties_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
          	android:background="#00ff0000"
             android:src="@drawable/ic_back"/>
 
@@ -34,7 +35,7 @@
     </LinearLayout>
     <View
 	    android:layout_width="match_parent"
-	    android:layout_height="3dp"
+	    android:layout_height="1dp"
 	    android:background="#FF00FF"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +58,6 @@
         android:orientation="vertical" >
         <ListView 
 	    	android:id="@+id/properties_list" 
-	    	 android:background="#000080"
 	    	android:layout_width="match_parent" 
 	    	android:layout_height="match_parent"/>
     	</LinearLayout>

@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:maxLength="20"
-           	android:textColor="#ffffff"
             android:text="TextView" />
 
         <TextView
@@ -25,7 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="#ffffff"
             android:text="TextView" />
 
     </LinearLayout>
@@ -35,7 +33,6 @@
         android:layout_weight="1"
         android:textSize="20sp"
         android:gravity="right"
-        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />

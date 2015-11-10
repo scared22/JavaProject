@@ -2,6 +2,7 @@ package com.example.musicplayer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import com.example.musicplayer.R.drawable;
@@ -10,10 +11,13 @@ import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.Media;
+import android.provider.MediaStore.Images;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -102,9 +106,17 @@ public class MyCursorAdapter extends CursorAdapter {
 			final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
 			Log.d("값"+Long.parseLong(songgetImage), "갑보자");
 			Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(songgetImage));
-			Log.d(""+uri, "입니다.");
-			if(uri != null)
-				item_list2_image.setImageURI(uri);
+			String uripath = uri.toString();
+			Bitmap bm = null;
+			try {
+				bm = Images.Media.getBitmap(mContext.getContentResolver(), uri);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(bm!=null)
+				item_list2_image.setImageBitmap(bm);
 			else
 				item_list2_image.setImageResource(R.drawable.noimages);
 		}
@@ -141,12 +153,15 @@ public class MyCursorAdapter extends CursorAdapter {
 	public Drawable getImage(String albumArt)
 	{
 		Drawable d;
+		
 		if(albumArt != null)
 		{
 			try{
+				
 				File artWorkFile = new File(albumArt);
 				InputStream in = new FileInputStream(artWorkFile);
-				d = Drawable.createFromStream(in, null);			
+				d = Drawable.createFromStream(in, null);	
+				Log.d(""+d, "d경로보자");
 				return d;	
 			}catch(IOException e){
 			}

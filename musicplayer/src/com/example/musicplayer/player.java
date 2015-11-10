@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.content.BroadcastReceiver;
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
-	int threadkill=0,pos,changecheck=0,updown=1,start;
+	int pos,changecheck=0,updown=1,start;
 	public static Context mContext;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar;
@@ -96,7 +96,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					e.printStackTrace();
 				}
 			}
-			
 		});
 	}
 	public void servicethread()
@@ -106,7 +105,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			public void run()
 			{
 				try {
-					while(seekcheck!=true&&mBinder.playjudge()==true)
+					while((seekcheck!=true)&&(mBinder.playjudge()==true))
 					{
 						try {
 							Thread.sleep(1000);
@@ -114,12 +113,9 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						if(threadkill==1)
-						{
-							threadkill=0;
-							break;
-						}
 					}
+					if(seekcheck)
+						seekthread=null;
 				} catch (RemoteException e) {}
 			}
 		};
@@ -149,6 +145,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	{
 		Cursorquery qr = new Cursorquery(mContext);
 		Log.d(""+pos, "º¯°æÀü");
+		seekcheck=true;
 		if(start==1)
 		{
 			qr.songlist(pos,updown);
@@ -161,6 +158,12 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			pos = ((songproperties)songproperties.mContext).getpos(pos, updown);
 			temp = ((songproperties)songproperties.mContext).getpath(pos);
 			subtitle = ((songproperties)songproperties.mContext).gettitle(pos);
+		}
+		if(start==3)
+		{
+			pos = ((artist_songlist)artist_songlist.mContext).getpos(pos, updown);
+			temp = ((artist_songlist)artist_songlist.mContext).getpath(pos);
+			subtitle = ((artist_songlist)artist_songlist.mContext).gettitle(pos);
 		}
 		title.setText(subtitle);
 		changecheck=1;
@@ -215,6 +218,15 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		if(fromUser)
+		{
+			seekcheck=true;
+			try {
+				mBinder.pause(mCallback);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
