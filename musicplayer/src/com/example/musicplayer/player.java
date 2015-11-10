@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -174,7 +176,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.player);
-		
 		btn_play = (ImageButton)findViewById(R.id.btn_play);
 		btn_play.setOnClickListener(this);
 		btn_list = (ImageButton)findViewById(R.id.btn_list);
@@ -255,6 +256,10 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		super.onDestroy();
 		unbindService(mConnection);
 	}
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+              super.onConfigurationChanged(newConfig);
+    }
 	
 }
 

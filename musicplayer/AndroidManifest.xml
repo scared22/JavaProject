@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation|keyboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,7 +28,9 @@
                 <action android:name="com.example.musicplayer.IMyService"/>
             </intent-filter>
         </service>
-        <activity android:name="player"></activity>
+        <activity android:name="player"
+            	  android:configChanges="orientation|screenSize">
+        </activity>
         <activity android:name="songproperties"></activity>
         <activity android:name="artist_songlist"></activity>
     </application>

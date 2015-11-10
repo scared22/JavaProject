@@ -21,6 +21,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		//viewpager
 		mPager = (ViewPager)findViewById(R.id.pager);
 		mPager.setAdapter(new pagerAdapter(getSupportFragmentManager()));
