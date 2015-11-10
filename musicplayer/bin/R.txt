@@ -455,7 +455,7 @@ int id action_menu_presenter 0x7f090006
 int id action_mode_bar 0x7f09003b
 int id action_mode_bar_stub 0x7f09003a
 int id action_mode_close_button 0x7f090023
-int id action_settings 0x7f09007b
+int id action_settings 0x7f09007d
 int id activity_chooser_view_content 0x7f090024
 int id album_count 0x7f090055
 int id album_title 0x7f090054
@@ -518,10 +518,10 @@ int id parentPanel 0x7f09002b
 int id playerBar 0x7f090070
 int id progress_circular 0x7f090007
 int id progress_horizontal 0x7f090008
-int id properties_back 0x7f090077
-int id properties_images 0x7f090079
-int id properties_list 0x7f09007a
-int id properties_title 0x7f090078
+int id properties_back 0x7f090079
+int id properties_images 0x7f09007b
+int id properties_list 0x7f09007c
+int id properties_title 0x7f09007a
 int id radio 0x7f090038
 int id screen 0x7f090015
 int id scrollView 0x7f090030
@@ -543,7 +543,7 @@ int id showTitle 0x7f090012
 int id song_artist 0x7f09005d
 int id song_duration 0x7f09005e
 int id song_title 0x7f09005c
-int id songlist 0x7f090076
+int id songlist 0x7f090078
 int id split_action_bar 0x7f090004
 int id src_atop 0x7f090016
 int id src_in 0x7f090017
@@ -554,6 +554,7 @@ int id tabMode 0x7f09000c
 int id text 0x7f09006c
 int id text2 0x7f09006a
 int id textSpacerNoButtons 0x7f090031
+int id textView1 0x7f090076
 int id text_alltime 0x7f090072
 int id text_current 0x7f090071
 int id time 0x7f090068
@@ -562,6 +563,7 @@ int id title_template 0x7f09002d
 int id topPanel 0x7f09002c
 int id up 0x7f090001
 int id useLogo 0x7f090013
+int id volumeseek 0x7f090077
 int id withText 0x7f09001d
 int id wrap_content 0x7f090009
 int integer abc_config_activityDefaultDur 0x7f080001

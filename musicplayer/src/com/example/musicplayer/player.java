@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -24,7 +25,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	int pos,changecheck=0,updown=1,start;
 	public static Context mContext;
 	boolean seekcheck=false;
-	SeekBar Playerseekbar;
+	SeekBar Playerseekbar,volumeseek;
 	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast;
 	TextView text_current,text_alltime,title;
 	String temp,subtitle;
@@ -188,6 +189,24 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		text_current = (TextView)findViewById(R.id.text_current);
 		Playerseekbar = (SeekBar)findViewById(R.id.playerBar);
 		title = (TextView)findViewById(R.id.title);
+		volumeseek = (SeekBar)findViewById(R.id.volumeseek);
+		final AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
+		int nMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		int curvol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		volumeseek.setMax(nMax);
+		volumeseek.setProgress(curvol);
+		volumeseek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}	
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,progress, 0);
+			}
+		});
 		mContext=this;
 		//service
 		Intent ServiceIntent = new Intent(this,MyService.class);
