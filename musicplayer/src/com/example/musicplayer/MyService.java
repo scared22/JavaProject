@@ -5,6 +5,7 @@ import android.media.AudioTrack;
 import java.io.FileOutputStream;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
@@ -12,13 +13,20 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class MyService extends Service{
-	int currenttime,temp=1;
+	int currenttime,temp=1,jari,song_id;
+	String songsubtitle,songpath,songpos;
+	public static String wherestr;
 	Thread Playthread;
 	boolean opencheck=false,mPlayjudge=false;
 	int readframe_check=1,bufSize,count=0,end=0;
 	private AudioTrack track;
 	private FileOutputStream os;
 	short[] bytes;
+	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
+		@Override
+		public void callback(final int num) throws RemoteException {
+		}
+	};
 	@Override
 	public void onCreate(){
 		super.onCreate();
@@ -49,10 +57,11 @@ public class MyService extends Service{
 						}while((temp!=0) && (readframe_check==1));
 						if(temp==0)
 						{
-							Log.d("리드프레임"+readframe_check+"temp값"+temp, "입니다.");
-							//브로드캐스트 보냄
-							Intent intent = new Intent("endsong");
-							sendBroadcast(intent);
+							try {
+								nextsong();
+							} catch (RemoteException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				};
@@ -86,7 +95,6 @@ public class MyService extends Service{
 		}
 		@Override
 		public void fileopen(String temp) throws RemoteException {
-			Log.d(""+opencheck, "입니다.");
 			if(opencheck==false)
 			{
 				createEngine();
@@ -112,6 +120,57 @@ public class MyService extends Service{
 		@Override
 		public int PlayingCount() throws RemoteException {
 			return count;
+		}
+		public String getItems(int im) throws RemoteException {
+			if(im == 1) //위치 반환
+				return songpos;
+			if(im == 2) //경로반환
+				return songpath;
+			if(im == 3) //제목반환
+				return songsubtitle;
+			return null;
+		}
+		@Override
+		public void changesong(int pos, int updown, int starts) throws RemoteException {
+			Cursorquery qr = new Cursorquery(getApplicationContext());
+			if(starts==1)
+				qr.songlist(pos, updown);
+			else if(starts == 2)
+			{
+				qr.allwhere(wherestr);
+				qr.albumlist(pos, updown);
+			}
+			else if(starts == 3)
+			{
+				qr.allwhere(wherestr);
+				qr.artistlist(pos, updown);
+			}
+			song_id = qr.position;
+			songpath = qr.path;
+			songsubtitle = qr.title;
+			songpos = String.valueOf(qr.position);
+		}
+		@Override
+		public void getwhere(String st) throws RemoteException {
+			wherestr = st;
+		}
+		@Override
+		public void nextsong() throws RemoteException {
+			//일단 초기화 시킨다.
+			Log.d("노래아이디"+song_id+"자리값:"+jari, "입력한값");
+			changesong(song_id, 1, jari);
+			Release();
+			Log.d(songpath, "다음값경로");
+			fileopen(songpath);
+			play(mCallback);
+			//브로드캐스트 보냄
+			Intent intent = new Intent("endsong");
+			sendBroadcast(intent);
+		}
+		@Override
+		public void remotesetting(int start, int pos) throws RemoteException {
+			jari = start;
+			song_id = pos;
 		}
 	};
 	@Override

@@ -10,8 +10,8 @@
 
         <ImageView
             android:id="@+id/albumimage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="left"
             android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
 
@@ -24,7 +24,7 @@
 
             <TextView
                 android:id="@+id/album_title"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:maxLength="12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

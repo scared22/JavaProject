@@ -28,13 +28,28 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/song_duration"
-        android:layout_weight="1"
-        android:textSize="20sp"
-        android:gravity="right"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:id="@+id/playing"
+            android:gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/noequlize" />
+
+        <TextView
+            android:id="@+id/song_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="TextView"
+            android:textSize="20sp" />
+    </LinearLayout>
 
 </LinearLayout>

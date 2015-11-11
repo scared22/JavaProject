@@ -11,4 +11,9 @@ interface IMyService
 	void getvalue(int value);
 	void Release();
 	int PlayingCount();
+	void changesong(int pos, int updown, int starts);
+	String getItems(int im);
+	void getwhere(String st);
+	void nextsong();
+	void remotesetting(int start, int pos);
 }

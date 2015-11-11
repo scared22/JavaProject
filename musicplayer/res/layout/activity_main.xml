@@ -46,9 +46,24 @@
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
+        android:layout_weight="10"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp">
     </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:background="#ffffff" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class songproperties extends Activity implements OnClickListener, OnItemClickListener {
 	public static Context mContext;
-	ImageView properties_images;
+	ImageView properties_images,playing;
 	ImageButton properties_back;
 	ListView properties_list;
 	TextView properties_title;
@@ -42,6 +42,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		properties_list = (ListView)findViewById(R.id.properties_list);
 		properties_back = (ImageButton)findViewById(R.id.properties_back);
 		properties_back.setOnClickListener(this);
+		playing = (ImageView)findViewById(R.id.playing);
 		mContext=this;
 		Intent intent1 = getIntent();
 		propertiescr = getContentResolver();
@@ -101,32 +102,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		intent2.putExtra("paths", path.toString());
 		intent2.putExtra("titles",title.toString());
 		intent2.putExtra("positions", position);
+		intent2.putExtra("where",selections[0]);
 		startActivity(intent2);
-	}
-	public int getpos(int pos ,int set)
-	{
-		if(pos<propertiesCursor.getCount()-1&&set==1)
-			pos++;
-		else if(pos>0 && set==0)
-			pos--;
-		else if(pos==0)
-			pos=propertiesCursor.getCount()-1;
-		else if(pos==propertiesCursor.getCount()-1 && set==1)
-			pos=0;
-		else 
-			pos=0;
-		return pos;
-	}
-	public String getpath(int pos)
-	{
-		propertiesCursor.moveToPosition(pos);
-		String path = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-		return path;
-	}
-	public String gettitle(int pos)
-	{
-		propertiesCursor.moveToPosition(pos);
-		String title = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
-		return title;
 	}
 }

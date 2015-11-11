@@ -69,6 +69,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		intent4.putExtra("paths", path.toString());
 		intent4.putExtra("titles", title.toString());
 		intent4.putExtra("positions", position);
+		intent4.putExtra("where", selections[0]);
 		startActivity(intent4);
 	}
 	public int getpos(int pos ,int set)
