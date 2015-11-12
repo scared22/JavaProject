@@ -216,11 +216,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	public void main_setting()
 	{
 		try {
-			if(mBinder.playjudge()==true)
+			if(mBinder.singing()==true)
 			{
 				String str = mBinder.getItems(3);
 				mini_title.setText(str);
 			}
+			if(mBinder.playjudge()==true)
+				mini_btn.setImageResource(R.drawable.ic_pause);
+			else
+				mini_btn.setImageResource(R.drawable.ic_play);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

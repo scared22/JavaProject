@@ -45,4 +45,33 @@
 	    	android:layout_width="match_parent" 
 	    	android:layout_height="match_parent"/>
     	</LinearLayout>
+    	    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="bottom"
+        android:layout_gravity="bottom" >
+        <ImageView
+            android:id="@+id/mini2_view"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/noimages" />
+        <TextView
+            android:id="@+id/mini2_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:gravity="center"
+            android:text="노래"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/mini2_btn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:gravity="right"
+            android:src="@drawable/ic_pause" />
+    </LinearLayout>
 </LinearLayout>

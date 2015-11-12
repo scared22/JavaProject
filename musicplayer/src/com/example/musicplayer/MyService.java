@@ -14,7 +14,7 @@ public class MyService extends Service{
 	String songsubtitle,songpath,songpos;
 	public static String wherestr;
 	Thread Playthread;
-	boolean opencheck=false,mPlayjudge=false;
+	boolean opencheck=false,mPlayjudge=false,sing=false;
 	int readframe_check=1,bufSize,count=0,end=0;
 	private AudioTrack track;
 	private FileOutputStream os;
@@ -94,6 +94,7 @@ public class MyService extends Service{
 		public void fileopen(String temp) throws RemoteException {
 			if(opencheck==false)
 			{
+				sing=true;
 				createEngine();
 				int temp1=initplayer(temp);
 				bufSize = 8 * AudioTrack.getMinBufferSize(44100,AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT);
@@ -171,6 +172,11 @@ public class MyService extends Service{
 			jari = start;
 			song_id = pos;
 			songsubtitle = str;
+		}
+		@Override
+		public boolean singing() throws RemoteException {
+			// 미니 플레이어바 재생 여부 확인 할려고 만든 거임, 노래제목 확인여부등
+			return sing;
 		}
 	};
 	@Override

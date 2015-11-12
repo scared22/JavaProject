@@ -16,4 +16,5 @@ interface IMyService
 	void getwhere(String st);
 	void nextsong();
 	void remotesetting(int start, int pos, String str);
+	boolean singing();
 }
