@@ -71,7 +71,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				start = intent1.getIntExtra("starts", 0);
 				subtitle = intent1.getStringExtra("titles");
 				pos = intent1.getIntExtra("positions", -1);
-				mBinder.remotesetting(start, pos);
+				mBinder.remotesetting(start, pos, subtitle);
 				title.setText(subtitle);
 				if((start == 2) || (start == 3))
 				{

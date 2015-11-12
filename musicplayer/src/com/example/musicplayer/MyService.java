@@ -4,10 +4,7 @@ import android.media.AudioManager;
 import android.media.AudioTrack;
 import java.io.FileOutputStream;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -103,6 +100,8 @@ public class MyService extends Service{
 				track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,AudioFormat.CHANNEL_OUT_STEREO,AudioFormat.ENCODING_PCM_16BIT, bufSize,AudioTrack.MODE_STREAM);
 				bytes = new short[bufSize];
 				opencheck = true;
+				Intent intent = new Intent("mini");
+				sendBroadcast(intent);				
 			}
 		}
 		@Override
@@ -168,9 +167,10 @@ public class MyService extends Service{
 			sendBroadcast(intent);
 		}
 		@Override
-		public void remotesetting(int start, int pos) throws RemoteException {
+		public void remotesetting(int start, int pos, String str) throws RemoteException {
 			jari = start;
 			song_id = pos;
+			songsubtitle = str;
 		}
 	};
 	@Override

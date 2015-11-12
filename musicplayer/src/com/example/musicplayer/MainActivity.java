@@ -1,6 +1,14 @@
 package com.example.musicplayer;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,21 +19,76 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	private ViewPager mPager;
 	Button btn_song,btn_artist,btn_album,btn_folder;
+	ImageButton mini_btn;
+	ImageView mini_view;
+	TextView mini_title;
 	int Max_PAGE = 4;
 	Fragment cur_fragment = new Fragment();
+	//service단
+	private IMyService mBinder = null;
+	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
+		@Override
+		public void callback(int num) throws RemoteException {
+		}
+	};
+	private ServiceConnection mConnection = new ServiceConnection() {
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mBinder = null;
+			Log.i("연결이 끊어졌습니다.", "메인액티비티");
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			Log.i("연결 되었습니다.", "메인액티비티");
+			mBinder = IMyService.Stub.asInterface(service);
+			main_setting();
+		}
+	};
+	//
+	//브로드캐스트
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if(action=="mini")
+			{
+				action=null;
+				main_setting();
+			}
+		}
+	};
+	//
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 		//viewpager
 		mPager = (ViewPager)findViewById(R.id.pager);
 		mPager.setAdapter(new pagerAdapter(getSupportFragmentManager()));
 		mPager.setCurrentItem(0);
+		//서비스 셋팅
+			Intent ServiceIntent = new Intent(this,MyService.class);
+			bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
+			startService(ServiceIntent);
+		//
+		//미니 플레이어바 셋팅
+		mini_btn = (ImageButton)findViewById(R.id.mini_btn);
+		mini_btn.setOnClickListener(this);
+		mini_title = (TextView)findViewById(R.id.mini_title);
+		mini_view = (ImageView)findViewById(R.id.mini_view);
+		//
+		//브로드캐스트 등록
+		IntentFilter Filter = new IntentFilter("mini");        
+		registerReceiver(receiver, Filter);
+		//
 		//버튼 셋팅
 		btn_song = (Button)findViewById(R.id.btn_song);
 		btn_song.setOnClickListener(this);
@@ -49,13 +112,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					break;
 				case 1:
 				{
-					Log.d(""+position, "입니다.");
 					btn_album.setSelected(true);
 					break;
 				}
 				case 2:
 				{
-					Log.d(""+position, "입니다.");
 					btn_artist.setSelected(true);
 					break;
 				}
@@ -102,6 +163,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			mPager.setCurrentItem(2);
 		else if(v.getId() == R.id.btn_folder)
 			mPager.setCurrentItem(3);
+		else if(v.getId() == R.id.mini_btn)
+		{
+			try {
+				if(mBinder.playjudge() == false)
+				{
+					mini_btn.setImageResource(R.drawable.ic_pause);
+					mBinder.play(mCallback);
+				}
+				else
+				{
+					mini_btn.setImageResource(R.drawable.ic_play);
+					mBinder.pause(mCallback);
+
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	private class pagerAdapter extends FragmentPagerAdapter
 	{
@@ -126,6 +205,24 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		@Override
 		public int getCount() {
 			return 4;
+		}
+	}
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		unbindService(mConnection);
+	}
+	public void main_setting()
+	{
+		try {
+			if(mBinder.playjudge()==true)
+			{
+				String str = mBinder.getItems(3);
+				mini_title.setText(str);
+			}
+		} catch (RemoteException e) {
+			e.printStackTrace();
 		}
 	}
 }

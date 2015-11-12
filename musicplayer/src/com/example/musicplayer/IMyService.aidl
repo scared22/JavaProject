@@ -15,5 +15,5 @@ interface IMyService
 	String getItems(int im);
 	void getwhere(String st);
 	void nextsong();
-	void remotesetting(int start, int pos);
+	void remotesetting(int start, int pos, String str);
 }

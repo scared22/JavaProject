@@ -53,16 +53,33 @@
     </android.support.v4.view.ViewPager>
 
     <LinearLayout
-        android:layout_weight="1"
         android:background="#ffffff" 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/mini_view"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/noimages" />
+
+        <TextView
+            android:id="@+id/mini_title"
+            android:layout_weight="6"
+            android:textSize="20sp"
+            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
+            android:layout_height="match_parent"
+            android:text="노래" />
+
+        <ImageButton
+            android:id="@+id/mini_btn"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:gravity="right"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_pause"/>
 
     </LinearLayout>
 
