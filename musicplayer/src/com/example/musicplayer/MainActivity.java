@@ -66,7 +66,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action=="mini")
+			if((action=="mini") || (action=="back"))
 			{
 				action=null;
 				main_setting();
@@ -94,8 +94,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		mini_view = (ImageView)findViewById(R.id.mini_view);
 		//
 		//브로드캐스트 등록
-		IntentFilter Filter = new IntentFilter("mini");        
+		IntentFilter Filter = new IntentFilter("mini");
+		IntentFilter Filter1 = new IntentFilter("back");
 		registerReceiver(receiver, Filter);
+		registerReceiver(receiver, Filter1);
 		//
 		//버튼 셋팅
 		btn_song = (Button)findViewById(R.id.btn_song);

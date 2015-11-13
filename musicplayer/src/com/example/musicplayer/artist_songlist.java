@@ -121,7 +121,11 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 	@Override
 	public void onClick(View v) {
 		if(v.getId()==R.id.artist_back)
+		{
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
 			finish();
+		}
 		if(v.getId()==R.id.mini2_btn)
 		{
 			try {

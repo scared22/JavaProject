@@ -135,7 +135,11 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 	@Override
 	public void onClick(View v) {
 		if(v.getId()==R.id.properties_back)
+		{
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
 			finish();
+		}
 		if(v.getId()==R.id.mini1_btn)
 		{
 			try {
