@@ -3,21 +3,26 @@ package com.example.musicplayer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +32,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class songproperties extends Activity implements OnClickListener, OnItemClickListener {
 	public static Context mContext;
@@ -105,6 +109,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 				MediaStore.Audio.Media.ARTIST,
 				MediaStore.Audio.AudioColumns.TITLE,
 				MediaStore.Audio.AudioColumns.DATA,
+				MediaStore.Audio.Media.ALBUM_ID,
 				MediaStore.Audio.Media.DURATION
 		};
 		gettitle=intent1.getStringExtra("albumtitle");
@@ -174,13 +179,15 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		propertiesCursor.moveToPosition(position);
 		String path = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-		String title = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));	
+		String title = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
+		String img = propertiesCursor.getString(propertiesCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 		Intent intent2 = new Intent(this,player.class);
 		intent2.putExtra("starts", 2);
 		intent2.putExtra("paths", path.toString());
 		intent2.putExtra("titles",title.toString());
 		intent2.putExtra("positions", position);
 		intent2.putExtra("where",selections[0]);
+		intent2.putExtra("imgs", img);
 		startActivity(intent2);
 	}
 	public void properties_setting()
@@ -191,6 +198,20 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 					String str = mBinder.getItems(3);
 					mini1_title.setText(str);
 					mini1_btn.setImageResource(R.drawable.ic_pause);
+					//이미지 처리해야 하는 부분
+					final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
+					Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(mBinder.songsimages()));
+					String uripath = uri.toString();
+					Bitmap bm = null;
+					try {
+						bm = Images.Media.getBitmap(getContentResolver(), uri);
+					} catch (FileNotFoundException e) {
+						mini1_view.setImageResource(R.drawable.noimages);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					if(bm!=null)
+						mini1_view.setImageBitmap(bm);
 				}
 				if(mBinder.playjudge()==false)
 				mini1_btn.setImageResource(R.drawable.ic_play);

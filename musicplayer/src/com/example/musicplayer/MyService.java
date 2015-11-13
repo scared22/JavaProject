@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class MyService extends Service{
 	int currenttime,temp=1,jari,song_id;
-	String songsubtitle,songpath,songpos;
+	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
 	Thread Playthread;
 	boolean opencheck=false,mPlayjudge=false,sing=false;
@@ -50,7 +50,12 @@ public class MyService extends Service{
 						{
 							temp = bufferengine(bytes);
 							track.write(bytes, 0, temp);
-							currenttime=gettime();	
+							try{
+								currenttime=gettime();
+							}catch(NumberFormatException e)
+							{
+								currenttime=0;
+							}
 						}while((temp!=0) && (readframe_check==1));
 						if(temp==0)
 						{
@@ -128,6 +133,8 @@ public class MyService extends Service{
 				return songpath;
 			if(im == 3) //제목반환
 				return songsubtitle;
+			if(im == 4) //이미지반환
+				return songimg;
 			return null;
 		}
 		@Override
@@ -148,6 +155,7 @@ public class MyService extends Service{
 			song_id = qr.position;
 			songpath = qr.path;
 			songsubtitle = qr.title;
+			songimg = qr.img;
 			songpos = String.valueOf(qr.position);
 		}
 		@Override
@@ -168,15 +176,21 @@ public class MyService extends Service{
 			sendBroadcast(intent);
 		}
 		@Override
-		public void remotesetting(int start, int pos, String str) throws RemoteException {
+		public void remotesetting(int start, int pos, String str, String bt) throws RemoteException {
 			jari = start;
 			song_id = pos;
 			songsubtitle = str;
+			songimg = bt;
 		}
 		@Override
 		public boolean singing() throws RemoteException {
 			// 미니 플레이어바 재생 여부 확인 할려고 만든 거임, 노래제목 확인여부등
 			return sing;
+		}
+		@Override
+		public String songsimages() throws RemoteException {
+			// 미니 플레이어바 이미지 나올수 있게 구현
+			return songimg;
 		}
 	};
 	@Override

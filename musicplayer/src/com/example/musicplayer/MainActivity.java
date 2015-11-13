@@ -1,14 +1,21 @@
 package com.example.musicplayer;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -224,14 +231,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			{
 				String str = mBinder.getItems(3);
 				mini_title.setText(str);
+				//이미지 처리해야 하는 부분
+				final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
+				Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(mBinder.songsimages()));
+				String uripath = uri.toString();
+				Bitmap bm = null;
+				try {
+					bm = Images.Media.getBitmap(getContentResolver(), uri);
+				} catch (FileNotFoundException e) {
+					mini_view.setImageResource(R.drawable.noimages);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(bm!=null)
+					mini_view.setImageBitmap(bm);
 			}
 			if(mBinder.playjudge()==true)
 				mini_btn.setImageResource(R.drawable.ic_pause);
 			else
 				mini_btn.setImageResource(R.drawable.ic_play);
 		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+			e.printStackTrace();}
 	}
 }
 

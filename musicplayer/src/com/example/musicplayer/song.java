@@ -38,6 +38,7 @@ public class song extends Fragment {
 			MediaStore.Audio.Media.ARTIST,
 			MediaStore.Audio.AudioColumns.TITLE,
 			MediaStore.Audio.AudioColumns.DATA,
+			MediaStore.Audio.Media.ALBUM_ID,
 			MediaStore.Audio.Media.DURATION};
 		musiccursor= cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, sortOrder);
 		myAdapter = new MyCursorAdapter(getContext(), musiccursor,1);
@@ -55,11 +56,13 @@ public class song extends Fragment {
 				Log.d(""+position, "입니다.");
 				String path = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
 				String title = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
+				String img = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 				//player에게  파일 경로를 넘긴다
 				intent1 = new Intent(getContext(),player.class);
 				intent1.putExtra("paths", path.toString());
 				intent1.putExtra("titles", title.toString());
 				intent1.putExtra("positions", position);
+				intent1.putExtra("imgs", img);
 				int set = 1;
 				intent1.putExtra("starts", set);
 				startActivity(intent1);

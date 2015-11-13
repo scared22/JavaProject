@@ -1,20 +1,28 @@
 package com.example.musicplayer;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -27,7 +35,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	SeekBar Playerseekbar,volumeseek;
 	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast;
 	TextView text_current,text_alltime,title;
-	String temp,subtitle,wheres;
+	String temp,subtitle,wheres,img;
+	ImageView playeralbums;
 	private IMyService mBinder = null;
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
@@ -55,7 +64,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			if(action=="endsong")
 			{
 				action=null;
-				//songchange();
 				setting2();
 			}
 		}
@@ -71,8 +79,10 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				start = intent1.getIntExtra("starts", 0);
 				subtitle = intent1.getStringExtra("titles");
 				pos = intent1.getIntExtra("positions", -1);
-				mBinder.remotesetting(start, pos, subtitle);
+				img = intent1.getStringExtra("imgs");
+				mBinder.remotesetting(start, pos, subtitle,img);
 				title.setText(subtitle);
+				playeralbum(img);
 				if((start == 2) || (start == 3))
 				{
 					wheres = intent1.getStringExtra("where");
@@ -99,6 +109,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				pos=Integer.parseInt(mBinder.getItems(1));		
 				temp=mBinder.getItems(2);		
 				subtitle=mBinder.getItems(3);
+				img = mBinder.getItems(4);
+				playeralbum(img);
 				title.setText(subtitle);
 				Playerseekbar.setMax(mBinder.musicduration());
 				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
@@ -171,7 +183,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		Log.d(""+pos, "º¯°æÀü");
 		seekcheck=true;
 			try {
-				if(start ==1)
+				if(start == 1)
 					mBinder.changesong(pos, updown, 1);
 				if(start == 2)		
 					mBinder.changesong(pos, updown, 2);
@@ -180,6 +192,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				pos=Integer.parseInt(mBinder.getItems(1));		
 				temp=mBinder.getItems(2);		
 				subtitle=mBinder.getItems(3);
+				img = mBinder.getItems(4);
+				playeralbum(img);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -205,6 +219,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		Playerseekbar = (SeekBar)findViewById(R.id.playerBar);
 		title = (TextView)findViewById(R.id.title);
 		volumeseek = (SeekBar)findViewById(R.id.volumeseek);
+		playeralbums = (ImageView)findViewById(R.id.playeralbum);
 		final AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
 		int nMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		int curvol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -294,6 +309,22 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
     public void onConfigurationChanged(Configuration newConfig) {
               super.onConfigurationChanged(newConfig);
     }
+	public void playeralbum(String temp)
+	{
+		final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
+		Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(temp));
+		String uripath = uri.toString();
+		Bitmap bm = null;
+		try {
+			bm = Images.Media.getBitmap(mContext.getContentResolver(), uri);
+		} catch (FileNotFoundException e) {
+			playeralbums.setImageResource(R.drawable.noimages2);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(bm!=null)
+			playeralbums.setImageBitmap(bm);
+	}
 	
 }
 

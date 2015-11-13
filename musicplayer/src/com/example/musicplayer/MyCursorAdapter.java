@@ -54,8 +54,13 @@ public class MyCursorAdapter extends CursorAdapter {
 			String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 			song_title.setText(title);
 			song_artist.setText(artist);
-			time = Integer.parseInt(duration);
-			song_duration.setText(String.format("%d분%d초", (time/60000)%60000,(time%60000)/1000));
+			try{
+				time = Integer.parseInt(duration);
+				song_duration.setText(String.format("%d분%d초", (time/60000)%60000,(time%60000)/1000));
+			}catch(NumberFormatException e){
+				if(duration == null)
+					time=0;
+			}
 		}
 		else if(jari==2)
 		{
@@ -104,21 +109,18 @@ public class MyCursorAdapter extends CursorAdapter {
 			item_list2_image = (ImageView)view.findViewById(R.id.list_item2_songimage);
 			songgetImage = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 			final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
-			Log.d("값"+Long.parseLong(songgetImage), "갑보자");
 			Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(songgetImage));
 			String uripath = uri.toString();
 			Bitmap bm = null;
 			try {
 				bm = Images.Media.getBitmap(mContext.getContentResolver(), uri);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				item_list2_image.setImageResource(R.drawable.noimages);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			if(bm!=null)
 				item_list2_image.setImageBitmap(bm);
-			else
-				item_list2_image.setImageResource(R.drawable.noimages);
 		}
 	}
 

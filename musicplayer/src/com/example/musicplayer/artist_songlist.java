@@ -1,19 +1,26 @@
 package com.example.musicplayer;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -129,7 +136,6 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 					{
 						mini2_btn.setImageResource(R.drawable.ic_play);
 						mBinder.pause(mCallback);
-	
 					}
 				}
 			} catch (RemoteException e) {
@@ -142,12 +148,14 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		artistsonglistCursor.moveToPosition(position);
 		String path = artistsonglistCursor.getString(artistsonglistCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
 		String title = artistsonglistCursor.getString(artistsonglistCursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+		String img = artistsonglistCursor.getString(artistsonglistCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 		Intent intent4 = new Intent(this,player.class);
 		intent4.putExtra("starts", 3);
 		intent4.putExtra("paths", path.toString());
 		intent4.putExtra("titles", title.toString());
 		intent4.putExtra("positions", position);
 		intent4.putExtra("where", selections[0]);
+		intent4.putExtra("imgs", img);
 		startActivity(intent4);
 	}
 	@Override
@@ -163,6 +171,20 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 				String str = mBinder.getItems(3);
 				mini2_title.setText(str);
 				mini2_btn.setImageResource(R.drawable.ic_pause);
+				//이미지 처리해야 하는 부분
+				final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
+				Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(mBinder.songsimages()));
+				String uripath = uri.toString();
+				Bitmap bm = null;
+				try {
+					bm = Images.Media.getBitmap(getContentResolver(), uri);
+				} catch (FileNotFoundException e) {
+					mini2_view.setImageResource(R.drawable.noimages);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if(bm!=null)
+					mini2_view.setImageBitmap(bm);
 			}
 			if(mBinder.playjudge()==false)
 				mini2_btn.setImageResource(R.drawable.ic_play);

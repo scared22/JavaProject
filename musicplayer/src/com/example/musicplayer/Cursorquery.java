@@ -13,7 +13,7 @@ public class Cursorquery {
 	Cursor db;
 	int position;
 	ContentResolver cr;
-	public String path,title;
+	public String path,title,img;
 	public static Context mContext;
 	public static String selections1; 
 	String[] cursorColumns;
@@ -27,6 +27,7 @@ public class Cursorquery {
 				MediaStore.Audio.Media.ARTIST,
 				MediaStore.Audio.AudioColumns.TITLE,
 				MediaStore.Audio.AudioColumns.DATA,
+				MediaStore.Audio.Media.ALBUM_ID,
 				MediaStore.Audio.Media.DURATION};
 	}
 	public void songlist(int pos ,int set)
@@ -66,6 +67,7 @@ public class Cursorquery {
 		position = pos;
 		path = db.getString(db.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
 		title = db.getString(db.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
+		img = db.getString(db.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 	}
 	public void allwhere(String s)
 	{
