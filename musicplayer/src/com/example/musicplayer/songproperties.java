@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class songproperties extends Activity implements OnClickListener, OnItemClickListener {
 	public static Context mContext;
@@ -133,15 +134,18 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		if(v.getId()==R.id.mini1_btn)
 		{
 			try {
-				if(mBinder.playjudge()==false)
+				if(mBinder.singing()==true)
 				{
-					mini1_btn.setImageResource(R.drawable.ic_pause);
-					mBinder.play(mCallback);
-				}
-				else
-				{
-					mini1_btn.setImageResource(R.drawable.ic_play);
-					mBinder.pause(mCallback);
+					if(mBinder.playjudge()==false)
+					{
+						mini1_btn.setImageResource(R.drawable.ic_pause);
+						mBinder.play(mCallback);
+					}
+					else
+					{
+						mini1_btn.setImageResource(R.drawable.ic_play);
+						mBinder.pause(mCallback);
+					}
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -186,6 +190,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 				{
 					String str = mBinder.getItems(3);
 					mini1_title.setText(str);
+					mini1_btn.setImageResource(R.drawable.ic_pause);
 				}
 				if(mBinder.playjudge()==false)
 				mini1_btn.setImageResource(R.drawable.ic_play);

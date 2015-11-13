@@ -62,7 +62,6 @@
             android:layout_height="match_parent"
             android:layout_weight="6"
             android:gravity="center"
-            android:text="노래"
             android:textSize="20sp" />
 
         <ImageButton

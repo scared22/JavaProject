@@ -1,5 +1,6 @@
 package com.example.musicplayer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -22,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class artist_songlist extends Activity implements OnClickListener, OnItemClickListener {
 	public static Context mContext;
@@ -51,6 +53,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.i("가수", "연결");
 			mBinder = IMyService.Stub.asInterface(service);
+			artist_setting();
 		}
 	};
 	//브로드캐스트
@@ -107,6 +110,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		artist_songlist_list.setAdapter(adapter);
 		artist_songlist_list.setOnItemClickListener(this);
 	}
+	@SuppressLint("ShowToast")
 	@Override
 	public void onClick(View v) {
 		if(v.getId()==R.id.artist_back)
@@ -114,16 +118,19 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		if(v.getId()==R.id.mini2_btn)
 		{
 			try {
-				if(mBinder.playjudge() == false)
+				if(mBinder.singing()==true)
 				{
-					mini2_btn.setImageResource(R.drawable.ic_pause);
-					mBinder.play(mCallback);
-				}
-				else
-				{
-					mini2_btn.setImageResource(R.drawable.ic_play);
-					mBinder.pause(mCallback);
-
+					if(mBinder.playjudge() == false)
+					{
+						mini2_btn.setImageResource(R.drawable.ic_pause);
+						mBinder.play(mCallback);
+					}
+					else
+					{
+						mini2_btn.setImageResource(R.drawable.ic_play);
+						mBinder.pause(mCallback);
+	
+					}
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -151,11 +158,14 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 	public void artist_setting()
 	{
 		try {
-			if(mBinder.playjudge()==true)
+			if(mBinder.singing()==true)
 			{
 				String str = mBinder.getItems(3);
 				mini2_title.setText(str);
+				mini2_btn.setImageResource(R.drawable.ic_pause);
 			}
+			if(mBinder.playjudge()==false)
+				mini2_btn.setImageResource(R.drawable.ic_play);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}

@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	private ViewPager mPager;
@@ -166,16 +167,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		else if(v.getId() == R.id.mini_btn)
 		{
 			try {
-				if(mBinder.playjudge() == false)
+				if(mBinder.singing()== true)
 				{
-					mini_btn.setImageResource(R.drawable.ic_pause);
-					mBinder.play(mCallback);
-				}
-				else
-				{
-					mini_btn.setImageResource(R.drawable.ic_play);
-					mBinder.pause(mCallback);
-
+					if(mBinder.playjudge() == false)
+					{
+						mini_btn.setImageResource(R.drawable.ic_pause);
+						mBinder.play(mCallback);
+					}
+					else
+					{
+						mini_btn.setImageResource(R.drawable.ic_play);
+						mBinder.pause(mCallback);
+	
+					}
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
