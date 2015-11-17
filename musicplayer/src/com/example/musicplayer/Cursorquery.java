@@ -1,7 +1,5 @@
 package com.example.musicplayer;
 
-import java.util.Properties;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,39 +28,53 @@ public class Cursorquery {
 				MediaStore.Audio.Media.ALBUM_ID,
 				MediaStore.Audio.Media.DURATION};
 	}
-	public void songlist(int pos ,int set)
+	public void songlist(int pos ,int set,int option)
 	{	
 		db=cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, null);
-		result(pos,set);
+		result(pos,set,option);
 	}
-	public void albumlist(int pos, int set)
+	public void albumlist(int pos, int set,int option)
 	{
 		selections = new String[]{
 				selections1
 		};	
 		db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns,MediaStore.Audio.Media.ALBUM+" LIKE ? ",selections, null);
-		result(pos,set);
+		result(pos,set,option);
 	}
-	public void artistlist(int pos, int set)
+	public void artistlist(int pos, int set,int option)
 	{
 		selections = new String[]{
 				selections1
 		};
 		db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);
-		result(pos,set);
+		result(pos,set,option);
 	}
-	public void result(int pos, int set)
+	public void result(int pos, int set, int option)
 	{
-		if(pos<db.getCount()-1&&set==1)
-			pos++;
-		else if(pos>0 && set==0)
-			pos--;
-		else if(pos==0)
-			pos=db.getCount()-1;
-		else if(pos==db.getCount()-1 && set==1)
-			pos=0;
-		else 
-			pos=0;
+		if(option == 0)
+		{
+			if(pos<db.getCount()-1&&set==1)
+				pos++;
+			else if(pos>0 && set==0)
+				pos--;
+			else if(pos==0)
+				pos=db.getCount()-1;
+			else if(pos==db.getCount()-1 && set==1)
+				pos=0;
+			else 
+				pos=0;
+		}
+		else if(option == 2)//셔플일때 
+		{
+			try {
+				pos = (int)((Math.random()*db.getCount())+1);
+				Log.d(""+pos,"랜덤 노래 나와라  ");
+			} catch (NumberFormatException e) {
+				pos=db.getCount()/3;
+			}
+
+		}
+		
 		db.moveToPosition(pos);
 		position = pos;
 		path = db.getString(db.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));

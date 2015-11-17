@@ -10,7 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class MyService extends Service{
-	int currenttime,temp=1,jari,song_id;
+	int currenttime,temp=1,jari,song_id,option=0;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
 	Thread Playthread;
@@ -141,16 +141,16 @@ public class MyService extends Service{
 		public void changesong(int pos, int updown, int starts) throws RemoteException {
 			Cursorquery qr = new Cursorquery(getApplicationContext());
 			if(starts==1)
-				qr.songlist(pos, updown);
+				qr.songlist(pos, updown,option);
 			else if(starts == 2)
 			{
 				qr.allwhere(wherestr);
-				qr.albumlist(pos, updown);
+				qr.albumlist(pos, updown,option);
 			}
 			else if(starts == 3)
 			{
 				qr.allwhere(wherestr);
-				qr.artistlist(pos, updown);
+				qr.artistlist(pos, updown,option);
 			}
 			song_id = qr.position;
 			songpath = qr.path;
@@ -191,6 +191,10 @@ public class MyService extends Service{
 		public String songsimages() throws RemoteException {
 			// 미니 플레이어바 이미지 나올수 있게 구현
 			return songimg;
+		}
+		@Override
+		public void getsongoption(int pos) throws RemoteException {
+			option=pos;
 		}
 	};
 	@Override

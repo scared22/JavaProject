@@ -18,4 +18,5 @@ interface IMyService
 	void remotesetting(int start, int pos, String str, String bt);
 	boolean singing();
 	String songsimages();
+	void getsongoption(int pos);
 }

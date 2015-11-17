@@ -29,11 +29,11 @@ import android.widget.TextView;
 import android.content.BroadcastReceiver;
 public class player extends Activity implements OnClickListener, OnSeekBarChangeListener {
 	Thread seekthread;
-	int pos,changecheck=0,updown=1,start;
+	int pos,changecheck=0,updown=1,start,optionpos=0;
 	public static Context mContext;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar,volumeseek;
-	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast;
+	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast,sing_option;
 	TextView text_current,text_alltime,title;
 	String temp,subtitle,wheres,img;
 	ImageView playeralbums;
@@ -223,6 +223,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		final AudioManager audioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
 		int nMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		int curvol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		sing_option = (ImageButton)findViewById(R.id.select_option);
+		sing_option.setOnClickListener(this);
 		volumeseek.setMax(nMax);
 		volumeseek.setProgress(curvol);
 		volumeseek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {			
@@ -253,7 +255,11 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		if(v.getId()==R.id.btn_play)
 			btn_test();
 		if(v.getId()==R.id.btn_list)
+		{
 			finish();
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
+		}
 		if(v.getId()==R.id.btn_fast)
 		{
 			updown=0;
@@ -263,6 +269,30 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		{
 			updown=1;
 			songchange();
+		}
+		if(v.getId()==R.id.select_option)
+		{
+			try {
+			if(optionpos == 0)
+				sing_option.setImageResource(R.drawable.unrepet);
+			else if(optionpos == 1)
+				sing_option.setImageResource(R.drawable.repet);
+			else if(optionpos == 2)
+				sing_option.setImageResource(R.drawable.shuffle);
+			mBinder.getsongoption(optionpos);
+			if(optionpos>2)
+			{
+				optionpos=0;
+				sing_option.setImageResource(R.drawable.unrepet);
+				mBinder.getsongoption(optionpos);
+			}
+			else
+				optionpos++;
+			
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

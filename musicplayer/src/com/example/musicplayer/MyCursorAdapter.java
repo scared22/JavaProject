@@ -5,18 +5,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import com.example.musicplayer.R.drawable;
-import android.R.interpolator;
+
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Audio.Media;
 import android.provider.MediaStore.Images;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
@@ -29,6 +26,7 @@ import android.widget.TextView;
 @SuppressWarnings("unused")
 public class MyCursorAdapter extends CursorAdapter {
 	int jari;
+	View v;
 	Context mContext;
 	@SuppressWarnings("deprecation")
 	public MyCursorAdapter(Context context, Cursor c, int pos) {
@@ -64,12 +62,12 @@ public class MyCursorAdapter extends CursorAdapter {
 		}
 		else if(jari==2)
 		{
+			String albumArt = null,title,songcount;
 			TextView album_title,album_artist;
 			ImageView album;
-			String albumArt,title,songcount;
-			album_title = (TextView)view.findViewById(R.id.album_title);
-			album_artist = (TextView)view.findViewById(R.id.album_count);
-			album = (ImageView)view.findViewById(R.id.albumimage);
+				album_title = (TextView)view.findViewById(R.id.album_title);
+				album_artist = (TextView)view.findViewById(R.id.album_count);
+				album = (ImageView)view.findViewById(R.id.albumimage);
 			//이미지 처리
 			int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
 			albumArt = cursor.getString(albumartIndex);
@@ -128,42 +126,40 @@ public class MyCursorAdapter extends CursorAdapter {
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		if(jari == 1 || jari == 21)
-		{
-			View v = inflater.inflate(R.layout.list_item, null);
-			return v;
-		}
-		if(jari == 2)
-		{
-			View v = inflater.inflate(R.layout.album_list_item1, null);
-			return v;
-		}
-		if(jari == 3)
-		{
-			View v = inflater.inflate(R.layout.artist_custom, null);
-			return v;
-		}
-		if(jari == 31)
-		{
-			View v = inflater.inflate(R.layout.list_item2, null);
-			return v;
-		}
-		else
-			return null;
+			if(jari == 1 || jari == 21)
+			{
+				v = inflater.inflate(R.layout.list_item, null);
+				return v;
+			}
+			if(jari == 2)
+			{
+				v = inflater.inflate(R.layout.album_list_item1, null);
+				return v;
+			}
+			if(jari == 3)
+			{
+				v = inflater.inflate(R.layout.artist_custom, null);
+				return v;
+			}
+			if(jari == 31)
+			{
+				v = inflater.inflate(R.layout.list_item2, null);
+				return v;
+			}
+			else
+				return null;
 	}
 	//이미지콜
 	public Drawable getImage(String albumArt)
 	{
 		Drawable d;
-		
 		if(albumArt != null)
 		{
 			try{
-				
 				File artWorkFile = new File(albumArt);
 				InputStream in = new FileInputStream(artWorkFile);
 				d = Drawable.createFromStream(in, null);	
-				Log.d(""+d, "d경로보자");
+				//Log.d(""+d, "d경로보자");
 				return d;	
 			}catch(IOException e){
 			}
