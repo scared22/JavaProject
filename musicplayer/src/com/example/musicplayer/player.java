@@ -76,37 +76,50 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			if(changecheck==0)
 			{
 				Intent intent1 = getIntent();
-				temp = intent1.getStringExtra("paths");
 				start = intent1.getIntExtra("starts", 0);
-				subtitle = intent1.getStringExtra("titles");
-				pos = intent1.getIntExtra("positions", -1);
-				img = intent1.getStringExtra("imgs");
-				mBinder.remotesetting(start, pos, subtitle,img);
-				title.setText(subtitle);
-				playeralbum(img);
-				if((start == 2) || (start == 3) ||(start == 4))
+				if(start!=5)
 				{
-					wheres = intent1.getStringExtra("where");
-					mBinder.getwhere(wheres);
+					temp = intent1.getStringExtra("paths");
+					subtitle = intent1.getStringExtra("titles");
+					pos = intent1.getIntExtra("positions", -1);
+					img = intent1.getStringExtra("imgs");
+					mBinder.remotesetting(start, pos, subtitle,img);
+					title.setText(subtitle);
+					playeralbum(img);
+					if((start == 2) || (start == 3) ||(start == 4))
+					{
+						wheres = intent1.getStringExtra("where");
+						mBinder.getwhere(wheres);
+					}
 				}
 			}
 			else
 				changecheck=0;
-			if(mBinder.PlayingCount()!=0)
-				mBinder.Release();
-			mBinder.fileopen(temp);
-			Playerseekbar.setMax(mBinder.musicduration());
-			text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
-			text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
-			btn_test();
+			if(start!=5)
+			{
+				if(mBinder.PlayingCount()!=0)
+					mBinder.Release();
+				mBinder.fileopen(temp);
+				Playerseekbar.setMax(mBinder.musicduration());
+				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
+				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
+				btn_test();
+			}
+			else
+			{
+				start=mBinder.getstart();
+				setting2();
+			}
 		}
 		 catch (RemoteException e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void setting2()
 	{
 		try {
+				Log.d("³ª¿È", "setting2");
 				pos=Integer.parseInt(mBinder.getItems(1));		
 				temp=mBinder.getItems(2);		
 				subtitle=mBinder.getItems(3);
@@ -119,6 +132,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				servicethread();
 				seekcheck=false;
 				btn_play.setImageResource(R.drawable.ic_pause);
+				if(mBinder.playjudge()==false)
+					btn_play.setImageResource(R.drawable.ic_play);
 			} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -291,7 +306,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			}
 			else
 				optionpos++;
-			
 			}
 			catch (RemoteException e) {
 				e.printStackTrace();
@@ -366,7 +380,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			sendBroadcast(intent);
 			finish();
         }
-        return true;
+        return false;
     }	
 }
 

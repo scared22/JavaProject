@@ -234,6 +234,6 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 			sendBroadcast(intent);
 			finish();
         }
-        return true;
+        return false;
     }	
 }

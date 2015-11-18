@@ -222,7 +222,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 			sendBroadcast(intent);
 			finish();
         }
-        return true;
+        return false;
     }
 	
 }

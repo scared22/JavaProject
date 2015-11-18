@@ -19,4 +19,5 @@ interface IMyService
 	boolean singing();
 	String songsimages();
 	void getsongoption(int pos);
+	int getstart();
 }

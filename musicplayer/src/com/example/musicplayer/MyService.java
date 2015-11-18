@@ -10,7 +10,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class MyService extends Service{
-	int currenttime,temp=1,jari,song_id,option=0;
+	int currenttime,temp=1,jari,song_id,option=0,startpos;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
 	Thread Playthread;
@@ -127,6 +127,7 @@ public class MyService extends Service{
 			return count;
 		}
 		public String getItems(int im) throws RemoteException {
+			Log.d("위치"+songpos+"경로"+songpath+"제목"+songsubtitle, "입니다.");
 			if(im == 1) //위치 반환
 				return songpos;
 			if(im == 2) //경로반환
@@ -186,6 +187,7 @@ public class MyService extends Service{
 			song_id = pos;
 			songsubtitle = str;
 			songimg = bt;
+			songpos = String.valueOf(pos);
 		}
 		@Override
 		public boolean singing() throws RemoteException {
@@ -201,6 +203,12 @@ public class MyService extends Service{
 		public void getsongoption(int pos) throws RemoteException {
 			option=pos;
 		}
+		@Override
+		public int getstart() throws RemoteException {
+			// 스타트 값 호출
+			return jari;
+		}
+	
 	};
 	@Override
 	public IBinder onBind(Intent intent) {

@@ -93,6 +93,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		mini_btn.setOnClickListener(this);
 		mini_title = (TextView)findViewById(R.id.mini_title);
 		mini_view = (ImageView)findViewById(R.id.mini_view);
+		mini_view.setOnClickListener(this);
 		//
 		//브로드캐스트 등록
 		IntentFilter Filter = new IntentFilter("mini");
@@ -190,6 +191,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 						mBinder.pause(mCallback);
 	
 					}
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		else if(v.getId()==R.id.mini_view)
+		{
+			try {
+				if(mBinder.singing()==true)
+				{
+					Intent intent1 = new Intent(this,player.class);
+					intent1.putExtra("starts", 5);
+					startActivity(intent1);
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
