@@ -60,25 +60,35 @@ public class MyCursorAdapter extends CursorAdapter {
 					time=0;
 			}
 		}
-		else if(jari==2)
+		else if(jari==2 || jari ==4)
 		{
-			String albumArt = null,title,songcount;
+			String albumArt = null,title=null,songcount=null;
 			TextView album_title,album_artist;
 			ImageView album;
 				album_title = (TextView)view.findViewById(R.id.album_title);
 				album_artist = (TextView)view.findViewById(R.id.album_count);
 				album = (ImageView)view.findViewById(R.id.albumimage);
 			//이미지 처리
-			int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
-			albumArt = cursor.getString(albumartIndex);
-			if(getImage(albumArt) != null)
-				album.setImageDrawable(getImage(albumArt));	
-			else
+			if(jari == 2)
+			{
+				int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
+				albumArt = cursor.getString(albumartIndex);
+				if(getImage(albumArt) != null)
+					album.setImageDrawable(getImage(albumArt));	
+				else
+					album.setImageResource(R.drawable.noimages);
+				title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+				songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
+			}
+			if(jari==4)
+			{
+				Log.d("여기 나오니?", "ㄴㅇㄹㄴㅇㄹㄴ");
 				album.setImageResource(R.drawable.noimages);
+				title = cursor.getString(0);
+				songcount = null;	
+			}
 			//나머지 처리
-			title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
 			album_title.setText(title);
-			songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 			album_artist.setText(songcount);
 		}
 		if(jari == 3)
@@ -131,7 +141,7 @@ public class MyCursorAdapter extends CursorAdapter {
 				v = inflater.inflate(R.layout.list_item, null);
 				return v;
 			}
-			if(jari == 2)
+			if(jari == 2 || jari == 4)
 			{
 				v = inflater.inflate(R.layout.album_list_item1, null);
 				return v;

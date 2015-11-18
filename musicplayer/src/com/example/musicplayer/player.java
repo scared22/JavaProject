@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore.Images;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -83,7 +84,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				mBinder.remotesetting(start, pos, subtitle,img);
 				title.setText(subtitle);
 				playeralbum(img);
-				if((start == 2) || (start == 3))
+				if((start == 2) || (start == 3) ||(start == 4))
 				{
 					wheres = intent1.getStringExtra("where");
 					mBinder.getwhere(wheres);
@@ -189,6 +190,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					mBinder.changesong(pos, updown, 2);
 				if(start == 3)
 					mBinder.changesong(pos, updown, 3);
+				if(start == 4)
+					mBinder.changesong(pos, updown, 4);
 				pos=Integer.parseInt(mBinder.getItems(1));		
 				temp=mBinder.getItems(2);		
 				subtitle=mBinder.getItems(3);
@@ -355,6 +358,15 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		if(bm!=null)
 			playeralbums.setImageBitmap(bm);
 	}
-	
+	@Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+        {
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
+			finish();
+        }
+        return true;
+    }	
 }
 

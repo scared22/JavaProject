@@ -44,6 +44,7 @@ public class artist extends Fragment {
 				String title = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
 				Intent intent1 = new Intent(getContext(),artist_songlist.class);
 				intent1.putExtra("artisttitle", title);
+				intent1.putExtra("getpos",1);
 				startActivity(intent1);
 			}
 		});

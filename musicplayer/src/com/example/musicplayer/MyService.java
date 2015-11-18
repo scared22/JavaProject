@@ -152,6 +152,11 @@ public class MyService extends Service{
 				qr.allwhere(wherestr);
 				qr.artistlist(pos, updown,option);
 			}
+			else if(starts == 4)
+			{
+				qr.allwhere(wherestr);
+				qr.folderlist(pos, updown, option);
+			}
 			song_id = qr.position;
 			songpath = qr.path;
 			songsubtitle = qr.title;

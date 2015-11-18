@@ -22,6 +22,7 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -44,6 +45,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 	ContentResolver artistsonglistcr;
 	ImageView mini2_view;
 	private IMyService mBinder = null;
+	int start;
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
 		public void callback(int num) throws RemoteException {
@@ -68,7 +70,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action=="mini")
+			if(action=="mini" || action == "back")
 			{
 				action=null;
 				artist_setting();
@@ -88,8 +90,10 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 			startService(ServiceIntent);
 		//
 		//브로드캐스트 등록
-		IntentFilter Filter = new IntentFilter("mini");        
+		IntentFilter Filter = new IntentFilter("mini");
+		IntentFilter Filter1 = new IntentFilter("back");
 		registerReceiver(receiver, Filter);
+		registerReceiver(receiver, Filter1);
 		//셋팅
 		mini2_btn = (ImageButton)findViewById(R.id.mini2_btn);
 		mini2_btn.setOnClickListener(this);
@@ -97,7 +101,14 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		mini2_title = (TextView)findViewById(R.id.mini2_title);
 		artist_title = (TextView)findViewById(R.id.artist_songlist_title);
 		getartist = intent1.getStringExtra("artisttitle");
-		artist_title.setText(getartist);
+		start=intent1.getIntExtra("getpos", 0);
+		if(start==1)	
+			artist_title.setText(getartist);
+		else
+		{
+			getartist = intent1.getStringExtra("ft");
+			artist_title.setText(getartist);
+		}
 		artist_back = (ImageButton)findViewById(R.id.artist_back);
 		artist_back.setOnClickListener(this);
 		artist_songlist_list = (ListView)findViewById(R.id.artist_songlist_list);
@@ -112,7 +123,11 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		selections = new String[]{
 				intent1.getStringExtra("artisttitle"),
 		};
-		artistsonglistCursor = artistsonglistcr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);
+		start=intent1.getIntExtra("getpos", 0);
+		if(start==1)
+			artistsonglistCursor = artistsonglistcr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);		
+		if(start==2)
+			artistsonglistCursor = artistsonglistcr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.DATA+" LIKE ?", selections, null);
 		adapter = new MyCursorAdapter(this, artistsonglistCursor, 31);
 		artist_songlist_list.setAdapter(adapter);
 		artist_songlist_list.setOnItemClickListener(this);
@@ -154,7 +169,10 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		String title = artistsonglistCursor.getString(artistsonglistCursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
 		String img = artistsonglistCursor.getString(artistsonglistCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 		Intent intent4 = new Intent(this,player.class);
-		intent4.putExtra("starts", 3);
+		if(start==1)
+			intent4.putExtra("starts", 3);
+		else
+			intent4.putExtra("starts", 4);
 		intent4.putExtra("paths", path.toString());
 		intent4.putExtra("titles", title.toString());
 		intent4.putExtra("positions", position);
@@ -196,4 +214,15 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 			e.printStackTrace();
 		}
 	}
+	@Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+        {
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
+			finish();
+        }
+        return true;
+    }
+	
 }

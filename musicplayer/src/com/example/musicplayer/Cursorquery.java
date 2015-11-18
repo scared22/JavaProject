@@ -49,6 +49,14 @@ public class Cursorquery {
 		db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);
 		result(pos,set,option);
 	}
+	public void folderlist(int pos, int set, int option)
+	{
+		selections = new String[]{
+				selections1
+		};
+		db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.DATA+" LIKE ?", selections, null);
+		result(pos,set,option);
+	}
 	public void result(int pos, int set, int option)
 	{
 		if(option == 0)

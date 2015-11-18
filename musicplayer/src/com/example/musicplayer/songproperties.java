@@ -24,6 +24,7 @@ import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -74,7 +75,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if(action=="mini")
+			if(action=="mini" || action == "back")
 			{
 				action=null;
 				properties_setting();
@@ -127,7 +128,8 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		properties_list.setAdapter(adapter);
 		properties_list.setOnItemClickListener(this);
 		//브로드캐스트 등록
-		IntentFilter Filter = new IntentFilter("mini");        
+		IntentFilter Filter = new IntentFilter("mini");
+		IntentFilter Filter1 = new IntentFilter("back");
 		registerReceiver(receiver, Filter);
 		//
 	}
@@ -224,4 +226,14 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 			e.printStackTrace();
 		}
 	}
+	@Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+        {
+			Intent intent = new Intent("back");
+			sendBroadcast(intent);
+			finish();
+        }
+        return true;
+    }	
 }
