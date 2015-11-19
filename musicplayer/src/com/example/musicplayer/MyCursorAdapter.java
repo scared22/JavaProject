@@ -60,7 +60,7 @@ public class MyCursorAdapter extends CursorAdapter {
 					time=0;
 			}
 		}
-		else if(jari==2 || jari ==4)
+		else if(jari==2)
 		{
 			String albumArt = null,title=null,songcount=null;
 			TextView album_title,album_artist;
@@ -80,24 +80,9 @@ public class MyCursorAdapter extends CursorAdapter {
 				title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
 				songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 			}
-			if(jari==4)
-			{
-				Log.d("여기 나오니?", "ㄴㅇㄹㄴㅇㄹㄴ");
-				album.setImageResource(R.drawable.noimages);
-				title = cursor.getString(0);
-				songcount = null;	
-			}
 			//나머지 처리
 			album_title.setText(title);
 			album_artist.setText(songcount);
-		}
-		if(jari == 3)
-		{
-			TextView artist_name;
-			artist_name = (TextView)view.findViewById(R.id.artist_name);
-			String artisttitle;
-			artisttitle = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
-			artist_name.setText(artisttitle);
 		}
 		if(jari == 31)
 		{
@@ -141,14 +126,9 @@ public class MyCursorAdapter extends CursorAdapter {
 				v = inflater.inflate(R.layout.list_item, null);
 				return v;
 			}
-			if(jari == 2 || jari == 4)
+			if(jari == 2)
 			{
 				v = inflater.inflate(R.layout.album_list_item1, null);
-				return v;
-			}
-			if(jari == 3)
-			{
-				v = inflater.inflate(R.layout.artist_custom, null);
 				return v;
 			}
 			if(jari == 31)

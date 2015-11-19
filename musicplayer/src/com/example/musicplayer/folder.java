@@ -39,8 +39,11 @@ public class folder extends Fragment {
 		if( musiccursor != null && musiccursor.getCount() > 0) {
 			 musiccursor.moveToFirst();
 		    while(! musiccursor.isAfterLast()) {
-		    	String []arr = musiccursor.getString(0).split("/");
-		        fl.add(arr[arr.length-1]);
+		    	if(musiccursor.getString(0)!=null)
+		    	{
+		    		String []arr = musiccursor.getString(0).split("/");
+		    		fl.add(arr[arr.length-1]);
+		    	}
 		        musiccursor.moveToNext();
 		    }
 		}
