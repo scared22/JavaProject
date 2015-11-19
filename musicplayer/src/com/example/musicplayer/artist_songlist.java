@@ -98,6 +98,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		mini2_btn = (ImageButton)findViewById(R.id.mini2_btn);
 		mini2_btn.setOnClickListener(this);
 		mini2_view = (ImageView)findViewById(R.id.mini2_view);
+		mini2_view.setOnClickListener(this);
 		mini2_title = (TextView)findViewById(R.id.mini2_title);
 		artist_title = (TextView)findViewById(R.id.artist_songlist_title);
 		getartist = intent1.getStringExtra("artisttitle");
@@ -156,6 +157,19 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 						mini2_btn.setImageResource(R.drawable.ic_play);
 						mBinder.pause(mCallback);
 					}
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		if(v.getId() == R.id.mini2_view)
+		{
+			try {
+				if(mBinder.singing()==true)
+				{
+					Intent intent1 = new Intent(this,player.class);
+					intent1.putExtra("starts", 5);
+					startActivity(intent1);
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();

@@ -27,6 +27,7 @@ public class folder extends Fragment {
 	Cursor musiccursor;
 	ArrayList<String> fl;
 	ArrayAdapter<String> adapter;
+	static int nullcount=0;
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -44,6 +45,8 @@ public class folder extends Fragment {
 		    		String []arr = musiccursor.getString(0).split("/");
 		    		fl.add(arr[arr.length-1]);
 		    	}
+		    	else
+		    		nullcount++;
 		        musiccursor.moveToNext();
 		    }
 		}
@@ -58,7 +61,7 @@ public class folder extends Fragment {
 		folderlist.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				musiccursor.moveToPosition(position);
+				musiccursor.moveToPosition(position+nullcount);
 				String title = musiccursor.getString(0)+"%";
 				String[] foldertitle = musiccursor.getString(0).split("/");
 				Intent intent1 = new Intent(getContext(),artist_songlist.class);

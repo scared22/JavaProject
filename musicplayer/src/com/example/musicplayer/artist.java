@@ -24,6 +24,7 @@ public class artist extends Fragment {
 	ArrayList<String> at;
 	ArrayAdapter<String>adapter;
 	Cursor musiccursor;
+	static int nullcount=0;
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -44,6 +45,8 @@ public class artist extends Fragment {
 					String arr = musiccursor.getString(1);
 					at.add(arr);
 				}
+				else
+					nullcount++;
 				musiccursor.moveToNext();
 			}
 		}
@@ -58,7 +61,7 @@ public class artist extends Fragment {
 		artistlist.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				musiccursor.moveToPosition(position);
+				musiccursor.moveToPosition(position+nullcount);
 				String title = musiccursor.getString(musiccursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
 				Intent intent1 = new Intent(getContext(),artist_songlist.class);
 				intent1.putExtra("artisttitle", title);

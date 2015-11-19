@@ -97,6 +97,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		mini1_btn = (ImageButton)findViewById(R.id.mini1_btn);
 		mini1_btn.setOnClickListener(this);
 		mini1_view = (ImageView)findViewById(R.id.mini1_view);
+		mini1_view.setOnClickListener(this);
 		mContext=this;
 		//service
 			Intent ServiceIntent = new Intent(this,MyService.class);
@@ -157,6 +158,19 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 						mini1_btn.setImageResource(R.drawable.ic_play);
 						mBinder.pause(mCallback);
 					}
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		if(v.getId() == R.id.mini1_view)
+		{
+			try {
+				if(mBinder.singing()==true)
+				{
+					Intent intent1 = new Intent(this,player.class);
+					intent1.putExtra("starts", 5);
+					startActivity(intent1);
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
