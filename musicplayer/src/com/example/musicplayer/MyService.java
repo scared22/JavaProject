@@ -3,6 +3,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import java.io.FileOutputStream;
+
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -10,6 +12,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public class MyService extends Service{
+	public static boolean IS_SERVICE_RUNNING = false;
 	int currenttime,temp=1,jari,song_id,option=0,startpos;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
@@ -30,9 +33,10 @@ public class MyService extends Service{
 	}
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
-//		Log.i("superdroid", "start");
+		//Log.i("superdroid", "start");
+		if(intent.getAction().equals(Constants.ACTION.START_ACTION))
+			showNotification();
 		return START_NOT_STICKY;
-		
 	};
 	IMyService.Stub mBinder = new IMyService.Stub() {
 		@Override
@@ -208,7 +212,6 @@ public class MyService extends Service{
 			// 스타트 값 호출
 			return jari;
 		}
-	
 	};
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -225,6 +228,8 @@ public class MyService extends Service{
 	public void onDestroy()
 	{
 		Log.i("superdroid","onDestroy");
+		Intent intent = new Intent("clear");
+		sendBroadcast(intent);		
 		super.onDestroy();
 	}
 	static{System.loadLibrary("ffmpeg");}
@@ -235,4 +240,17 @@ public class MyService extends Service{
 	private native int getduration();
 	private native int gettime();
 	private native int setseeking(int temp);
+	private void showNotification()
+	{
+		//이전곡
+		Intent previousIntent = new Intent(getApplicationContext(),MyService.class);
+		previousIntent.setAction(Constants.ACTION.PREV_ACTION);
+		PendingIntent ppreviousIntent = PendingIntent.getService(getApplicationContext(), 0, previousIntent, 0);
+		//play
+		Intent playIntent = new Intent(getApplicationContext(),MyService.class);
+		playIntent.setAction(Constants.ACTION.PLAY_ACTION);
+		PendingIntent pplayIntent = PendingIntent.getService(getApplicationContext(), 0, playIntent, 0);
+		//다음곡
+		
+	}
 }

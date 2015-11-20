@@ -239,7 +239,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	public void onDestroy()
 	{
 		super.onDestroy();
-		unbindService(mConnection);
+		Log.d("앱이죽었습니다.", "메인액티비티");
+		//unbindService(mConnection);
 	}
 	public void main_setting()
 	{

@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <ImageView
+        android:id="@+id/noti_view"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/noti_text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="노래제목"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <ImageButton
+                android:id="@+id/noti_fast"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="#00ff0000"
+                android:src="@drawable/ic_fast" />
+
+            <ImageButton
+                android:id="@+id/noti_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="#00ff0000"
+                android:src="@drawable/ic_play" />
+
+            <ImageButton
+                android:id="@+id/noti_fast_forword"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="#00ff0000"
+                android:src="@drawable/ic_fast_forward" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageButton android:id="@+id/noti_clear" android:layout_width="50dp" android:layout_height="50dp" android:background="#00ff0000" android:src="@drawable/clear" />
+
+</LinearLayout>

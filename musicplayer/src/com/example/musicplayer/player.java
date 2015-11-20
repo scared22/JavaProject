@@ -261,7 +261,12 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		//service
 		Intent ServiceIntent = new Intent(this,MyService.class);
 		bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
-		startService(ServiceIntent);
+		//forgroundservice 시작
+		if(!MyService.IS_SERVICE_RUNNING)
+		{
+			ServiceIntent.setAction(Constants.ACTION.START_ACTION);
+			MyService.IS_SERVICE_RUNNING = true;
+		}
 		Playerseekbar.setOnSeekBarChangeListener(this);
 		//브로드캐스트 리시버 등록
 		IntentFilter Filter = new IntentFilter("endsong");        
@@ -348,10 +353,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			e.printStackTrace();
 		}
 	}
-	public void onDestroy(){
-		super.onDestroy();
-		unbindService(mConnection);
-	}
+
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
               super.onConfigurationChanged(newConfig);

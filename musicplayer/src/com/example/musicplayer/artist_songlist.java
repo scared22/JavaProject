@@ -87,7 +87,6 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		//service
 			Intent ServiceIntent = new Intent(this,MyService.class);
 			bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
-			startService(ServiceIntent);
 		//
 		//브로드캐스트 등록
 		IntentFilter Filter = new IntentFilter("mini");

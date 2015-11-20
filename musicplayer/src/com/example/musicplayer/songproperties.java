@@ -102,7 +102,6 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		//service
 			Intent ServiceIntent = new Intent(this,MyService.class);
 			bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
-			startService(ServiceIntent);
 		//
 		Intent intent1 = getIntent();
 		propertiescr = getContentResolver();
