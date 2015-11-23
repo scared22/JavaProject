@@ -38,6 +38,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	TextView text_current,text_alltime,title;
 	String temp,subtitle,wheres,img;
 	ImageView playeralbums;
+	Intent ServiceIntent;
 	private IMyService mBinder = null;
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
@@ -67,6 +68,22 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				action=null;
 				setting2();
 			}
+			if(action=="chsong")
+			{			
+				try {
+					changecheck=1;
+					pos=Integer.parseInt(mBinder.getItems(1));
+					temp=mBinder.getItems(2);		
+					subtitle=mBinder.getItems(3);
+					img = mBinder.getItems(4);
+					title.setText(subtitle);
+					playeralbum(img);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}	
+			}
 		}
 	};
 	//
@@ -95,6 +112,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			}
 			else
 				changecheck=0;
+			ServiceIntent.setAction(Constants.ACTION.START_ACTION);
+			startService(ServiceIntent);
 			if(start!=5)
 			{
 				if(mBinder.PlayingCount()!=0)
@@ -259,18 +278,14 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		});
 		mContext=this;
 		//service
-		Intent ServiceIntent = new Intent(this,MyService.class);
+		ServiceIntent = new Intent(this,MyService.class);
 		bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
-		//forgroundservice 시작
-		if(!MyService.IS_SERVICE_RUNNING)
-		{
-			ServiceIntent.setAction(Constants.ACTION.START_ACTION);
-			MyService.IS_SERVICE_RUNNING = true;
-		}
 		Playerseekbar.setOnSeekBarChangeListener(this);
 		//브로드캐스트 리시버 등록
-		IntentFilter Filter = new IntentFilter("endsong");        
+		IntentFilter Filter = new IntentFilter("endsong");   
+		IntentFilter Filter1 = new IntentFilter("chsong");
 		registerReceiver(receiver, Filter);
+		registerReceiver(receiver, Filter1);
 	}
 	@Override
 	public void onClick(View v)

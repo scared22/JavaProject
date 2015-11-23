@@ -144,6 +144,9 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		if(v.getId()==R.id.mini2_btn)
 		{
 			try {
+				Intent intent10 = new Intent(this,MyService.class);
+				intent10.setAction(Constants.ACTION.START_ACTION);
+				startService(intent10);
 				if(mBinder.singing()==true)
 				{
 					if(mBinder.playjudge() == false)

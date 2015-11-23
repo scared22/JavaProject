@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		//서비스 셋팅
 			Intent ServiceIntent = new Intent(this,MyService.class);
 			bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
-			startService(ServiceIntent);
+			//startService(ServiceIntent);
 		//
 		//미니 플레이어바 셋팅
 		mini_btn = (ImageButton)findViewById(R.id.mini_btn);
@@ -180,6 +180,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			try {
 				if(mBinder.singing()== true)
 				{
+					Intent intent10 = new Intent(this,MyService.class);
+					intent10.setAction(Constants.ACTION.START_ACTION);
+					startService(intent10);
 					if(mBinder.playjudge() == false)
 					{
 						mini_btn.setImageResource(R.drawable.ic_pause);
@@ -189,7 +192,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					{
 						mini_btn.setImageResource(R.drawable.ic_play);
 						mBinder.pause(mCallback);
-	
 					}
 				}
 			} catch (RemoteException e) {
@@ -265,9 +267,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					mini_view.setImageBitmap(bm);
 			}
 			if(mBinder.playjudge()==true)
+			{
+				Log.d("들어온다..", "들어온다.");
 				mini_btn.setImageResource(R.drawable.ic_pause);
+			}
 			else
+			{
 				mini_btn.setImageResource(R.drawable.ic_play);
+			}
 		} catch (RemoteException e) {
 			e.printStackTrace();}
 	}

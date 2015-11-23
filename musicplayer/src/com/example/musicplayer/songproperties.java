@@ -147,6 +147,9 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 			try {
 				if(mBinder.singing()==true)
 				{
+					Intent intent10 = new Intent(this,MyService.class);
+					intent10.setAction(Constants.ACTION.START_ACTION);
+					startService(intent10);
 					if(mBinder.playjudge()==false)
 					{
 						mini1_btn.setImageResource(R.drawable.ic_pause);

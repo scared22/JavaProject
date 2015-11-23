@@ -3,16 +3,19 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 import java.io.FileOutputStream;
-
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class MyService extends Service{
-	public static boolean IS_SERVICE_RUNNING = false;
+	//public static boolean IS_SERVICE_RUNNING = false;
 	int currenttime,temp=1,jari,song_id,option=0,startpos;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
@@ -34,9 +37,58 @@ public class MyService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		//Log.i("superdroid", "start");
+		Log.d(intent.getAction(), "리모트서비스");
 		if(intent.getAction().equals(Constants.ACTION.START_ACTION))
 			showNotification();
-		return START_NOT_STICKY;
+		if(intent.getAction().equals(Constants.ACTION.PLAY_ACTION))
+		{
+			try {
+				if(mBinder.playjudge()==true)
+				{
+					showNotification();
+					mBinder.pause(mCallback);
+				}
+				else
+				{
+					showNotification();
+					mBinder.play(mCallback);
+				}
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		if(intent.getAction().equals(Constants.ACTION.PREV_ACTION))
+		{
+			try {
+				Log.d("아이디"+song_id+"자리값"+jari, "이전곡터치");
+				mBinder.changesong(song_id, 0, jari);
+				mBinder.Release();
+				mBinder.fileopen(songpath);
+				mBinder.play(mCallback);
+				showNotification();
+				Intent intent11 = new Intent("chsong");
+				sendBroadcast(intent11);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		if(intent.getAction().equals(Constants.ACTION.NEXT_ACTION))
+		{
+			try {
+				Log.d("아이디"+song_id+"자리값"+jari, "다음곡터치");
+				mBinder.changesong(song_id, 1, jari);
+				mBinder.Release();
+				mBinder.fileopen(songpath);
+				mBinder.play(mCallback);
+				showNotification();
+				Intent intent11 = new Intent("chsong");
+				sendBroadcast(intent11);
+				
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
+		return START_STICKY;
 	};
 	IMyService.Stub mBinder = new IMyService.Stub() {
 		@Override
@@ -111,7 +163,10 @@ public class MyService extends Service{
 				bytes = new short[bufSize];
 				opencheck = true;
 				Intent intent = new Intent("mini");
-				sendBroadcast(intent);				
+				sendBroadcast(intent);		
+				Intent intent10 = new Intent(getApplicationContext(),MyService.class);
+				intent10.setAction(Constants.ACTION.START_ACTION);
+				startService(intent10);
 			}
 		}
 		@Override
@@ -242,15 +297,82 @@ public class MyService extends Service{
 	private native int setseeking(int temp);
 	private void showNotification()
 	{
+		//재생 정지 일때 notification을 다르게 나타낸다 . 겨우 한줄 코드 가지고 한줄 변경할라고 함수를 두개나 만들었다.
+		try {
+			if(mBinder.playjudge()==false)
+				playnoti();
+			else
+				stopnoti();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+	private void playnoti()
+	{
+		Notification noti=null;
+		//
+		Intent notificationIntent = new Intent(getApplicationContext(),player.class);
+		notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 		//이전곡
 		Intent previousIntent = new Intent(getApplicationContext(),MyService.class);
 		previousIntent.setAction(Constants.ACTION.PREV_ACTION);
 		PendingIntent ppreviousIntent = PendingIntent.getService(getApplicationContext(), 0, previousIntent, 0);
 		//play
+		//
 		Intent playIntent = new Intent(getApplicationContext(),MyService.class);
 		playIntent.setAction(Constants.ACTION.PLAY_ACTION);
 		PendingIntent pplayIntent = PendingIntent.getService(getApplicationContext(), 0, playIntent, 0);
 		//다음곡
-		
+		Intent nextIntent = new Intent(getApplicationContext(),MyService.class);
+		nextIntent.setAction(Constants.ACTION.NEXT_ACTION);
+		PendingIntent pnextIntent = PendingIntent.getService(getApplicationContext(), 0, nextIntent, 0);
+		Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.icon);
+		noti = new NotificationCompat.Builder(this)
+				.setContentTitle(songsubtitle)
+				.setSmallIcon(R.drawable.icon)
+				.setLargeIcon(icon)
+				.setContentIntent(pendingIntent)
+				.setOngoing(true)
+				.addAction(R.drawable.ic_fast,null, ppreviousIntent)
+				.addAction(R.drawable.ic_pause,null, pplayIntent)
+				.addAction(R.drawable.ic_fast_forward,null,pnextIntent).build();			 
+			startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, noti);	
+	}
+	private void stopnoti()
+	{
+		Notification noti=null;
+		//
+		Intent notificationIntent = new Intent(getApplicationContext(),player.class);
+		notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+		//이전곡
+		Intent previousIntent = new Intent(getApplicationContext(),MyService.class);
+		previousIntent.setAction(Constants.ACTION.PREV_ACTION);
+		PendingIntent ppreviousIntent = PendingIntent.getService(getApplicationContext(), 0, previousIntent, 0);
+		//play
+		//
+		Intent playIntent = new Intent(getApplicationContext(),MyService.class);
+		playIntent.setAction(Constants.ACTION.PLAY_ACTION);
+		PendingIntent pplayIntent = PendingIntent.getService(getApplicationContext(), 0, playIntent, 0);
+		//다음곡
+		Intent nextIntent = new Intent(getApplicationContext(),MyService.class);
+		nextIntent.setAction(Constants.ACTION.NEXT_ACTION);
+		PendingIntent pnextIntent = PendingIntent.getService(getApplicationContext(), 0, nextIntent, 0);
+		Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.icon);
+		noti = new NotificationCompat.Builder(this)
+				.setContentTitle(songsubtitle)
+				.setSmallIcon(R.drawable.icon)
+				.setLargeIcon(icon)
+				.setContentIntent(pendingIntent)
+				.setOngoing(true)
+				.addAction(R.drawable.ic_fast,null, ppreviousIntent)
+				.addAction(R.drawable.ic_play,null, pplayIntent)
+				.addAction(R.drawable.ic_fast_forward,null,pnextIntent).build();			 
+			startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, noti);	
 	}
 }
