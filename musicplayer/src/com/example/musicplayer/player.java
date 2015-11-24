@@ -2,6 +2,7 @@ package com.example.musicplayer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -32,6 +33,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	Thread seekthread;
 	int pos,changecheck=0,updown=1,start,optionpos=0;
 	public static Context mContext;
+	String cm=null,cs = null;
 	boolean seekcheck=false;
 	SeekBar Playerseekbar,volumeseek;
 	ImageButton btn_play,btn_list,btn_fast_foward,btn_fast,sing_option;
@@ -75,14 +77,33 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					pos=Integer.parseInt(mBinder.getItems(1));
 					temp=mBinder.getItems(2);		
 					subtitle=mBinder.getItems(3);
-					img = mBinder.getItems(4);
+					if(cs != null && cm != null)
+					{
+						img = mBinder.getItems(4);
+						playeralbum(img);
+					}
 					title.setText(subtitle);
-					playeralbum(img);
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}	
+			}
+			if(action=="noticontrol")
+			{
+				try {
+					if(mBinder.playjudge()==false)
+					{
+						btn_play.setImageResource(R.drawable.ic_play);
+						seekcheck=true;
+					}
+					else
+					{
+						btn_play.setImageResource(R.drawable.ic_pause);
+						seekcheck=false;
+						servicethread();
+					}
+				} catch (RemoteException e) {e.printStackTrace();}				
 			}
 		}
 	};
@@ -102,6 +123,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					img = intent1.getStringExtra("imgs");
 					mBinder.remotesetting(start, pos, subtitle,img);
 					title.setText(subtitle);
+					if(cm!=null && cs!= null)
 					playeralbum(img);
 					if((start == 2) || (start == 3) ||(start == 4))
 					{
@@ -109,6 +131,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 						mBinder.getwhere(wheres);
 					}
 				}
+				
 			}
 			else
 				changecheck=0;
@@ -116,12 +139,15 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			startService(ServiceIntent);
 			if(start!=5)
 			{
+				
 				if(mBinder.PlayingCount()!=0)
 					mBinder.Release();
 				mBinder.fileopen(temp);
 				Playerseekbar.setMax(mBinder.musicduration());
 				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
-				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
+				cm=Long.toString(mBinder.current()/60);
+				cs=Long.toString(mBinder.current()%60);	
+				text_current.setText(cm.trim()+":"+cs.trim());
 				btn_test();
 			}
 			else
@@ -196,6 +222,9 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	public void btn_test()
 	{
 		try {
+			Intent intent10 = new Intent(this,MyService.class);
+			intent10.setAction(Constants.ACTION.START_ACTION);
+			startService(intent10);
 			if(mBinder.playjudge()==false)
 			{
 				btn_play.setImageResource(R.drawable.ic_pause);
@@ -284,8 +313,10 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		//브로드캐스트 리시버 등록
 		IntentFilter Filter = new IntentFilter("endsong");   
 		IntentFilter Filter1 = new IntentFilter("chsong");
+		IntentFilter Filter2 = new IntentFilter("noticontrol");
 		registerReceiver(receiver, Filter);
 		registerReceiver(receiver, Filter1);
+		registerReceiver(receiver, Filter2);
 	}
 	@Override
 	public void onClick(View v)

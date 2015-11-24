@@ -15,12 +15,12 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class MyService extends Service{
-	//public static boolean IS_SERVICE_RUNNING = false;
-	int currenttime,temp=1,jari,song_id,option=0,startpos;
+	int currenttime,temp=1,jari,song_id,option=0,startpos,noticount=0;
+	public static int notich=0;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
 	Thread Playthread;
-	boolean opencheck=false,mPlayjudge=false,sing=false;
+	boolean opencheck=false,mPlayjudge=false,sing=false,notips=false;
 	int readframe_check=1,bufSize,count=0,end=0;
 	private AudioTrack track;
 	private FileOutputStream os;
@@ -37,22 +37,21 @@ public class MyService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		//Log.i("superdroid", "start");
-		Log.d(intent.getAction(), "리모트서비스");
+		//Log.d(intent.getAction(), "리모트서비스");
+		if(intent.getAction().equals(null))
+			showNotification();
 		if(intent.getAction().equals(Constants.ACTION.START_ACTION))
 			showNotification();
 		if(intent.getAction().equals(Constants.ACTION.PLAY_ACTION))
 		{
 			try {
+				showNotification();
 				if(mBinder.playjudge()==true)
-				{
-					showNotification();
 					mBinder.pause(mCallback);
-				}
 				else
-				{
-					showNotification();
 					mBinder.play(mCallback);
-				}
+				Intent intent12 = new Intent("noticontrol");
+				sendBroadcast(intent12);
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -65,7 +64,7 @@ public class MyService extends Service{
 				mBinder.Release();
 				mBinder.fileopen(songpath);
 				mBinder.play(mCallback);
-				showNotification();
+				notich=1;
 				Intent intent11 = new Intent("chsong");
 				sendBroadcast(intent11);
 			} catch (RemoteException e) {
@@ -80,10 +79,9 @@ public class MyService extends Service{
 				mBinder.Release();
 				mBinder.fileopen(songpath);
 				mBinder.play(mCallback);
-				showNotification();
 				Intent intent11 = new Intent("chsong");
 				sendBroadcast(intent11);
-				
+				notich=1;
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -108,10 +106,7 @@ public class MyService extends Service{
 							track.write(bytes, 0, temp);
 							try{
 								currenttime=gettime();
-							}catch(NumberFormatException e)
-							{
-								currenttime=0;
-							}
+							}catch(NumberFormatException e){currenttime=0;}
 						}while((temp!=0) && (readframe_check==1));
 						if(temp==0)
 						{
@@ -143,9 +138,7 @@ public class MyService extends Service{
 		}
 
 		@Override
-		public int current() throws RemoteException {
-			return currenttime;
-		}
+		public int current() throws RemoteException {return currenttime;}
 
 		@Override
 		public void getvalue(int value) throws RemoteException {
@@ -163,7 +156,7 @@ public class MyService extends Service{
 				bytes = new short[bufSize];
 				opencheck = true;
 				Intent intent = new Intent("mini");
-				sendBroadcast(intent);		
+				sendBroadcast(intent);	
 				Intent intent10 = new Intent(getApplicationContext(),MyService.class);
 				intent10.setAction(Constants.ACTION.START_ACTION);
 				startService(intent10);
@@ -236,6 +229,7 @@ public class MyService extends Service{
 			Log.d(songpath, "다음값경로");
 			fileopen(songpath);
 			play(mCallback);
+			notich=1;
 			//브로드캐스트 보냄
 			Intent intent = new Intent("endsong");
 			sendBroadcast(intent);
@@ -299,8 +293,18 @@ public class MyService extends Service{
 	{
 		//재생 정지 일때 notification을 다르게 나타낸다 . 겨우 한줄 코드 가지고 한줄 변경할라고 함수를 두개나 만들었다.
 		try {
-			if(mBinder.playjudge()==false)
+			Log.d(""+mBinder.playjudge()+notich, "후 힘들다");
+			if(mBinder.playjudge()==false && notich==0)
 				playnoti();
+			else if(notich==0 && mBinder.playjudge()==true)
+				stopnoti();
+			else if(notich==0 && mBinder.playjudge()==false)
+				playnoti();
+			else if(notich==1)
+			{
+				notich=0;
+				playnoti();
+			}
 			else
 				stopnoti();
 		} catch (RemoteException e) {
@@ -372,7 +376,7 @@ public class MyService extends Service{
 				.setOngoing(true)
 				.addAction(R.drawable.ic_fast,null, ppreviousIntent)
 				.addAction(R.drawable.ic_play,null, pplayIntent)
-				.addAction(R.drawable.ic_fast_forward,null,pnextIntent).build();			 
+				.addAction(R.drawable.ic_fast_forward,null,pnextIntent).build();	
 			startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, noti);	
 	}
 }

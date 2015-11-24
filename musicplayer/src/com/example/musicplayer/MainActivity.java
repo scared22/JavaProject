@@ -72,6 +72,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				action=null;
 				main_setting();
 			}
+			if(action=="noticontrol")
+			{
+				action=null;
+				try {
+					if(mBinder.playjudge() == true)
+						mini_btn.setImageResource(R.drawable.ic_pause);
+					else
+						mini_btn.setImageResource(R.drawable.ic_play);
+				} catch (RemoteException e) {e.printStackTrace();}
+			}
 		}
 	};
 	//
@@ -98,8 +108,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		//브로드캐스트 등록
 		IntentFilter Filter = new IntentFilter("mini");
 		IntentFilter Filter1 = new IntentFilter("back");
+		IntentFilter Filter2 = new IntentFilter("noticontrol");
 		registerReceiver(receiver, Filter);
 		registerReceiver(receiver, Filter1);
+		registerReceiver(receiver, Filter2);
 		//
 		//버튼 셋팅
 		btn_song = (Button)findViewById(R.id.btn_song);
@@ -193,6 +205,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 						mini_btn.setImageResource(R.drawable.ic_play);
 						mBinder.pause(mCallback);
 					}
+					
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
@@ -242,7 +255,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	{
 		super.onDestroy();
 		Log.d("앱이죽었습니다.", "메인액티비티");
-		//unbindService(mConnection);
+		unbindService(mConnection);
 	}
 	public void main_setting()
 	{
@@ -267,14 +280,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 					mini_view.setImageBitmap(bm);
 			}
 			if(mBinder.playjudge()==true)
-			{
-				Log.d("들어온다..", "들어온다.");
 				mini_btn.setImageResource(R.drawable.ic_pause);
-			}
 			else
-			{
 				mini_btn.setImageResource(R.drawable.ic_play);
-			}
 		} catch (RemoteException e) {
 			e.printStackTrace();}
 	}

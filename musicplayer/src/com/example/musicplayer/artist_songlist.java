@@ -75,6 +75,16 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 				action=null;
 				artist_setting();
 			}
+			if(action=="noticontrol")
+			{
+				action=null;
+				try {
+					if(mBinder.playjudge() == true)
+						mini2_btn.setImageResource(R.drawable.ic_pause);
+					else
+						mini2_btn.setImageResource(R.drawable.ic_play);
+				} catch (RemoteException e) {e.printStackTrace();}
+			}
 		}
 	};
 	//
@@ -91,8 +101,10 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		//브로드캐스트 등록
 		IntentFilter Filter = new IntentFilter("mini");
 		IntentFilter Filter1 = new IntentFilter("back");
+		IntentFilter Filter2 = new IntentFilter("noticontrol");
 		registerReceiver(receiver, Filter);
 		registerReceiver(receiver, Filter1);
+		registerReceiver(receiver, Filter2);
 		//셋팅
 		mini2_btn = (ImageButton)findViewById(R.id.mini2_btn);
 		mini2_btn.setOnClickListener(this);
