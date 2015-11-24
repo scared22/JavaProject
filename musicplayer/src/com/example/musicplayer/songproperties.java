@@ -102,7 +102,6 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		properties_list = (ListView)findViewById(R.id.properties_list);
 		properties_back = (ImageButton)findViewById(R.id.properties_back);
 		properties_back.setOnClickListener(this);
-		playing = (ImageView)findViewById(R.id.playing);
 		mini1_title = (TextView)findViewById(R.id.mini1_title);
 		mini1_btn = (ImageButton)findViewById(R.id.mini1_btn);
 		mini1_btn.setOnClickListener(this);

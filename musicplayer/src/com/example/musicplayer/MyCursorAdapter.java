@@ -54,7 +54,7 @@ public class MyCursorAdapter extends CursorAdapter {
 			song_artist.setText(artist);
 			try{
 				time = Integer.parseInt(duration);
-				song_duration.setText(String.format("%d∫–%d√ ", (time/60000)%60000,(time%60000)/1000));
+				song_duration.setText(String.format("%02d:%02d", (time/60000)%60000,(time%60000)/1000));
 			}catch(NumberFormatException e){
 				if(duration == null)
 					time=0;

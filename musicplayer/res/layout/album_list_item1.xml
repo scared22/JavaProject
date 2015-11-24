@@ -10,8 +10,8 @@
 
         <ImageView
             android:id="@+id/albumimage"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
             android:layout_gravity="left"
             android:src="@drawable/abc_ab_share_pack_mtrl_alpha" />
 
@@ -32,7 +32,7 @@
 
             <TextView
                 android:id="@+id/album_count"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="노래갯수" />
