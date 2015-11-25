@@ -39,8 +39,8 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 	ImageView properties_images,playing,mini1_view;
 	ImageButton properties_back,mini1_btn;
 	ListView properties_list;
-	TextView properties_title,mini1_title;
-	String getimages,gettitle;
+	TextView properties_title,mini1_title,album_count,album_year;
+	String getimages,gettitle,getalbumcount,getalbumyear;
 	Cursor propertiesCursor;
 	String[] cursorColumns,selections;
 	ContentResolver propertiescr;
@@ -107,6 +107,8 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		mini1_btn.setOnClickListener(this);
 		mini1_view = (ImageView)findViewById(R.id.mini1_view);
 		mini1_view.setOnClickListener(this);
+		album_count = (TextView)findViewById(R.id.album_count);
+		album_year = (TextView)findViewById(R.id.album_year);
 		mContext=this;
 		//service
 			Intent ServiceIntent = new Intent(this,MyService.class);
@@ -124,6 +126,11 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 		};
 		gettitle=intent1.getStringExtra("albumtitle");
 		properties_title.setText(gettitle);
+		properties_title.setSelected(true);
+		getalbumcount = intent1.getStringExtra("albumcounts");
+		album_count.setText("³ë·¡ °¹¼ö:"+getalbumcount);
+		getalbumyear = intent1.getStringExtra("albumyear");
+		album_year.setText(getalbumyear);
 		getimages = intent1.getStringExtra("albumimages");
 		if(Getalbumimages(getimages)!=null)
 			properties_images.setImageDrawable(Getalbumimages(getimages));

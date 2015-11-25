@@ -35,8 +35,8 @@ import android.widget.Toast;
 
 public class artist_songlist extends Activity implements OnClickListener, OnItemClickListener {
 	public static Context mContext;
-	TextView artist_title,mini2_title;
-	String getartist;
+	TextView artist_title,mini2_title,path_count;
+	String getartist,getpath;
 	ImageButton artist_back,mini2_btn;
 	ListView artist_songlist_list;
 	MyCursorAdapter adapter;
@@ -111,6 +111,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		mini2_view = (ImageView)findViewById(R.id.mini2_view);
 		mini2_view.setOnClickListener(this);
 		mini2_title = (TextView)findViewById(R.id.mini2_title);
+		path_count = (TextView)findViewById(R.id.path_count);
 		artist_title = (TextView)findViewById(R.id.artist_songlist_title);
 		getartist = intent1.getStringExtra("artisttitle");
 		start=intent1.getIntExtra("getpos", 0);
@@ -120,7 +121,11 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		{
 			getartist = intent1.getStringExtra("ft");
 			artist_title.setText(getartist);
+			getpath = intent1.getStringExtra("folderpath");
+			path_count.setText("파일경로"+getpath);
+			path_count.setSelected(true);
 		}
+		artist_title.setSelected(true);
 		artist_back = (ImageButton)findViewById(R.id.artist_back);
 		artist_back.setOnClickListener(this);
 		artist_songlist_list = (ListView)findViewById(R.id.artist_songlist_list);
@@ -137,7 +142,10 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 		};
 		start=intent1.getIntExtra("getpos", 0);
 		if(start==1)
+		{
 			artistsonglistCursor = artistsonglistcr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);		
+			path_count.setText("노래 수:"+artistsonglistCursor.getCount());
+		}
 		if(start==2)
 			artistsonglistCursor = artistsonglistcr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.DATA+" LIKE ?", selections, null);
 		adapter = new MyCursorAdapter(this, artistsonglistCursor, 31);

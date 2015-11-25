@@ -68,6 +68,7 @@ public class folder extends Fragment {
 				intent1.putExtra("artisttitle", title);
 				intent1.putExtra("getpos",2);
 				intent1.putExtra("ft", foldertitle[foldertitle.length-1]);
+				intent1.putExtra("folderpath", title);
 				startActivity(intent1);
 			}
 		});
