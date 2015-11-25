@@ -24,7 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 @SuppressWarnings("unused")
+
 public class MyCursorAdapter extends CursorAdapter {
+	static class ViewHolder{
+		TextView album_title,album_artist,list_item2_title,list_item2_duration;
+		ImageView album,item_list2_image;
+	};
 	int jari;
 	View v;
 	Context mContext;
@@ -62,44 +67,36 @@ public class MyCursorAdapter extends CursorAdapter {
 		}
 		else if(jari==2)
 		{
+			ViewHolder holder = (ViewHolder)view.getTag();
 			String albumArt = null,title=null,songcount=null;
-			TextView album_title,album_artist;
-			ImageView album;
-				album_title = (TextView)view.findViewById(R.id.album_title);
-				album_artist = (TextView)view.findViewById(R.id.album_count);
-				album = (ImageView)view.findViewById(R.id.albumimage);
 			//이미지 처리
 			if(jari == 2)
 			{
 				int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
 				albumArt = cursor.getString(albumartIndex);
 				if(getImage(albumArt) != null)
-					album.setImageDrawable(getImage(albumArt));	
+					holder.album.setImageDrawable(getImage(albumArt));	
 				else
-					album.setImageResource(R.drawable.noimages);
+					holder.album.setImageResource(R.drawable.noimages);
 				title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
 				songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 			}
 			//나머지 처리
-			album_title.setText(title);
-			album_artist.setText(songcount);
+			holder.album_title.setText(title);
+			holder.album_artist.setText(songcount);
 		}
 		if(jari == 31)
 		{
-			TextView list_item2_title,list_item2_duration;
-			ImageView item_list2_image;
+			ViewHolder holder = (ViewHolder)view.getTag();
 			String title,duration,albumArt,songgetImage;
 			Cursorquery csq = new Cursorquery(mContext);
 			int time;			
 			//셋팅
-			list_item2_title = (TextView)view.findViewById(R.id.list_item2_title);
 			title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-			list_item2_title.setText(title);
-			list_item2_duration = (TextView)view.findViewById(R.id.list_item2_duration);
+			holder.list_item2_title.setText(title);
 			duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 			time = Integer.parseInt(duration);
-			list_item2_duration.setText(String.format("%d분%d초", (time/60000)%60000,(time%60000)/1000));
-			item_list2_image = (ImageView)view.findViewById(R.id.list_item2_songimage);
+			holder.list_item2_duration.setText(String.format("%d분%d초", (time/60000)%60000,(time%60000)/1000));
 			songgetImage = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 			final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
 			Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(songgetImage));
@@ -108,12 +105,12 @@ public class MyCursorAdapter extends CursorAdapter {
 			try {
 				bm = Images.Media.getBitmap(mContext.getContentResolver(), uri);
 			} catch (FileNotFoundException e) {
-				item_list2_image.setImageResource(R.drawable.noimages);
+				holder.item_list2_image.setImageResource(R.drawable.noimages);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			if(bm!=null)
-				item_list2_image.setImageBitmap(bm);
+				holder.item_list2_image.setImageBitmap(bm);
 		}
 	}
 
@@ -129,11 +126,21 @@ public class MyCursorAdapter extends CursorAdapter {
 			if(jari == 2)
 			{
 				v = inflater.inflate(R.layout.album_list_item1, null);
+				ViewHolder holder = new ViewHolder();
+				holder.album_title = (TextView)v.findViewById(R.id.album_title);
+				holder.album_artist = (TextView)v.findViewById(R.id.album_count);
+				holder.album = (ImageView)v.findViewById(R.id.albumimage);
+				v.setTag(holder);
 				return v;
 			}
 			if(jari == 31)
 			{
 				v = inflater.inflate(R.layout.list_item2, null);
+				ViewHolder holder = new ViewHolder();
+				holder.list_item2_title = (TextView)v.findViewById(R.id.list_item2_title);
+				holder.list_item2_duration = (TextView)v.findViewById(R.id.list_item2_duration);
+				holder.item_list2_image = (ImageView)v.findViewById(R.id.list_item2_songimage);
+				v.setTag(holder);
 				return v;
 			}
 			else
@@ -149,7 +156,6 @@ public class MyCursorAdapter extends CursorAdapter {
 				File artWorkFile = new File(albumArt);
 				InputStream in = new FileInputStream(artWorkFile);
 				d = Drawable.createFromStream(in, null);	
-				//Log.d(""+d, "d경로보자");
 				return d;	
 			}catch(IOException e){
 			}

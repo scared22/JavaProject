@@ -86,7 +86,7 @@ public class MyService extends Service{
 				e.printStackTrace();
 			}
 		}
-		return START_STICKY;
+		return START_NOT_STICKY;
 	};
 	IMyService.Stub mBinder = new IMyService.Stub() {
 		@Override
