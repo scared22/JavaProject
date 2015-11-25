@@ -2,8 +2,6 @@ package com.example.musicplayer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentUris;
@@ -137,11 +135,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			}
 			else
 				changecheck=0;
-			ServiceIntent.setAction(Constants.ACTION.START_ACTION);
-			startService(ServiceIntent);
 			if(start!=5)
 			{
-				
 				if(mBinder.PlayingCount()!=0)
 					mBinder.Release();
 				mBinder.fileopen(temp);
@@ -150,7 +145,13 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				cm=Long.toString(mBinder.current()/60);
 				cs=Long.toString(mBinder.current()%60);	
 				text_current.setText(cm.trim()+":"+cs.trim());
-				btn_test();
+				if(mBinder.playjudge()==false)
+				{
+					btn_play.setImageResource(R.drawable.ic_pause);
+					mBinder.play(mCallback);
+					servicethread();
+					seekcheck=false;
+				}
 			}
 			else
 			{
@@ -224,12 +225,11 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 	public void btn_test()
 	{
 		try {
-			Intent intent10 = new Intent(this,MyService.class);
-			intent10.setAction(Constants.ACTION.START_ACTION);
-			startService(intent10);
 			if(mBinder.playjudge()==false)
 			{
 				btn_play.setImageResource(R.drawable.ic_pause);
+				ServiceIntent.setAction(Constants.ACTION.MAIN_START_ACTION);
+				startService(ServiceIntent);
 				mBinder.play(mCallback);
 				servicethread();
 				seekcheck=false;
@@ -237,6 +237,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			else
 			{
 				btn_play.setImageResource(R.drawable.ic_play);
+				ServiceIntent.setAction(Constants.ACTION.MAIN_STOP_ACTION);
+				startService(ServiceIntent);
 				seekcheck=true;
 				mBinder.pause(mCallback);
 			}
@@ -311,6 +313,12 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		//service
 		ServiceIntent = new Intent(this,MyService.class);
 		bindService(ServiceIntent, mConnection, BIND_AUTO_CREATE);
+		if(!MyService.IS_SERVICE_RUNNING)
+		{
+			ServiceIntent.setAction(Constants.ACTION.START_ACTION);
+			MyService.IS_SERVICE_RUNNING=true;
+			startService(ServiceIntent);
+		}
 		Playerseekbar.setOnSeekBarChangeListener(this);
 		//브로드캐스트 리시버 등록
 		IntentFilter Filter = new IntentFilter("endsong");   

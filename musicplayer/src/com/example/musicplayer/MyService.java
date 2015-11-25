@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
@@ -17,6 +18,7 @@ import android.util.Log;
 public class MyService extends Service{
 	int currenttime,temp=1,jari,song_id,option=0,startpos,noticount=0;
 	public static int notich=0;
+	 public static boolean IS_SERVICE_RUNNING = false;
 	String songsubtitle,songpath,songpos,songimg;
 	public static String wherestr;
 	Thread Playthread;
@@ -38,10 +40,12 @@ public class MyService extends Service{
 		super.onStartCommand(intent, flags, startId);
 		//Log.i("superdroid", "start");
 		//Log.d(intent.getAction(), "리모트서비스");
-		if(intent.getAction().equals(null))
-			showNotification();
 		if(intent.getAction().equals(Constants.ACTION.START_ACTION))
 			showNotification();
+		if(intent.getAction().equals(Constants.ACTION.MAIN_STOP_ACTION))
+			stopnoti();
+		if(intent.getAction().equals(Constants.ACTION.MAIN_START_ACTION))
+			playnoti();
 		if(intent.getAction().equals(Constants.ACTION.PLAY_ACTION))
 		{
 			try {
@@ -64,7 +68,6 @@ public class MyService extends Service{
 				mBinder.Release();
 				mBinder.fileopen(songpath);
 				mBinder.play(mCallback);
-				notich=1;
 				Intent intent11 = new Intent("chsong");
 				sendBroadcast(intent11);
 			} catch (RemoteException e) {
@@ -81,7 +84,6 @@ public class MyService extends Service{
 				mBinder.play(mCallback);
 				Intent intent11 = new Intent("chsong");
 				sendBroadcast(intent11);
-				notich=1;
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -157,9 +159,7 @@ public class MyService extends Service{
 				opencheck = true;
 				Intent intent = new Intent("mini");
 				sendBroadcast(intent);	
-				Intent intent10 = new Intent(getApplicationContext(),MyService.class);
-				intent10.setAction(Constants.ACTION.START_ACTION);
-				startService(intent10);
+				showNotification();
 			}
 		}
 		@Override
@@ -241,6 +241,7 @@ public class MyService extends Service{
 			songsubtitle = str;
 			songimg = bt;
 			songpos = String.valueOf(pos);
+			notich=1;
 		}
 		@Override
 		public boolean singing() throws RemoteException {
@@ -293,29 +294,19 @@ public class MyService extends Service{
 	{
 		//재생 정지 일때 notification을 다르게 나타낸다 . 겨우 한줄 코드 가지고 한줄 변경할라고 함수를 두개나 만들었다.
 		try {
-			Log.d(""+mBinder.playjudge()+notich, "후 힘들다");
-			if(mBinder.playjudge()==false && notich==0)
+			if(mBinder.playjudge()==false )
 				playnoti();
-			else if(notich==0 && mBinder.playjudge()==true)
-				stopnoti();
-			else if(notich==0 && mBinder.playjudge()==false)
-				playnoti();
-			else if(notich==1)
-			{
-				notich=0;
-				playnoti();
-			}
 			else
 				stopnoti();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		} catch (RemoteException e) {e.printStackTrace();}
 	}
 	private void playnoti()
 	{
 		Notification noti=null;
 		//
-		Intent notificationIntent = new Intent(getApplicationContext(),player.class);
+		Intent notificationIntent = new Intent(getApplicationContext(),MainActivity
+				
+				.class);
 		notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
