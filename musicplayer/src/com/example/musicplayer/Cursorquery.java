@@ -75,12 +75,12 @@ public class Cursorquery {
 		else if(option == 2)//셔플일때 
 		{
 			try {
-				pos = (int)((Math.random()*db.getCount())+1);
-				Log.d(""+pos,"랜덤 노래 나와라  ");
+				Log.d("총노래갯수:"+db.getCount(), "현재값"+pos);
+				if(set==1)
+					pos = (int)((Math.random()*db.getCount())+1);
 			} catch (NumberFormatException e) {
 				pos=db.getCount()/3;
 			}
-
 		}
 		
 		db.moveToPosition(pos);

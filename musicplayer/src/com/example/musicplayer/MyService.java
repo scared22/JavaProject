@@ -7,7 +7,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
@@ -16,7 +15,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class MyService extends Service{
-	int currenttime,temp=1,jari,song_id,option=0,startpos,noticount=0;
+	int currenttime,temp=1,jari,song_id,startpos,noticount=0;
+	static int option=0;
 	public static int notich=0;
 	 public static boolean IS_SERVICE_RUNNING = false;
 	String songsubtitle,songpath,songpos,songimg;
@@ -261,6 +261,11 @@ public class MyService extends Service{
 		public int getstart() throws RemoteException {
 			// 스타트 값 호출
 			return jari;
+		}
+		@Override
+		public int setsongoption() throws RemoteException {
+			//노래 재생방식 호출
+			return option;
 		}
 	};
 	@Override

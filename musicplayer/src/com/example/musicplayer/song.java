@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
 import android.support.v4.app.Fragment;
