@@ -2,7 +2,6 @@ package com.example.musicplayer;
 
 import java.util.ArrayList;
 
-import android.R.anim;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class folder extends Fragment {
@@ -61,7 +59,7 @@ public class folder extends Fragment {
 		folderlist.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				musiccursor.moveToPosition(position+nullcount);
+				musiccursor.moveToPosition(position);
 				String title = musiccursor.getString(0)+"%";
 				String[] foldertitle = musiccursor.getString(0).split("/");
 				Intent intent1 = new Intent(getContext(),artist_songlist.class);

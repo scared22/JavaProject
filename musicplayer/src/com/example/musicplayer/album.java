@@ -34,6 +34,7 @@ public class album extends Fragment {
 		};
 		musiccursor = albumcr.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, cursorColumns, null, null,null);
 		adapter = new MyCursorAdapter(getContext(), musiccursor, 2);
+		
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saavedInstanceState)
@@ -41,6 +42,7 @@ public class album extends Fragment {
 		LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.album,container,false);
 		albumlist = (ListView)layout.findViewById(R.id.albumlist);
 		albumlist.setAdapter(adapter);
+		
 		albumlist.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

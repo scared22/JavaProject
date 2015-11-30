@@ -228,6 +228,7 @@ public class artist_songlist extends Activity implements OnClickListener, OnItem
 			{
 				String str = mBinder.getItems(3);
 				mini2_title.setText(str);
+				mini2_title.setSelected(true);
 				mini2_btn.setImageResource(R.drawable.ic_pause);
 				//이미지 처리해야 하는 부분
 				final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");

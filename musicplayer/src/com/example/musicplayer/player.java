@@ -75,11 +75,8 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					pos=Integer.parseInt(mBinder.getItems(1));
 					temp=mBinder.getItems(2);		
 					subtitle=mBinder.getItems(3);
-					if(cs != null && cm != null)
-					{
-						img = mBinder.getItems(4);
-						playeralbum(img);
-					}
+					img = mBinder.getItems(4);
+					playeralbum(img);
 					title.setText(subtitle);
 					title.setSelected(true);
 				} catch (NumberFormatException e) {
@@ -123,7 +120,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					mBinder.remotesetting(start, pos, subtitle,img);
 					title.setText(subtitle);
 					title.setSelected(true);
-					if(cm!=null && cs!= null)
 					playeralbum(img);
 					if((start == 2) || (start == 3) ||(start == 4))
 					{

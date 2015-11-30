@@ -82,7 +82,13 @@
             android:layout_height="match_parent"
             android:layout_weight="6"
             android:gravity="center"
-            android:textSize="20sp" />
+            android:textSize="20sp" 
+           	android:focusable="true" 
+	 		android:singleLine="true" 
+			android:ellipsize="marquee" 
+			android:marqueeRepeatLimit="marquee_forever" 	
+			android:scrollHorizontally="true" 
+			android:focusableInTouchMode="true"/>
 
         <ImageButton
             android:id="@+id/mini2_btn"

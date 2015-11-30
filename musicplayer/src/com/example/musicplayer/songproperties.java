@@ -238,6 +238,7 @@ public class songproperties extends Activity implements OnClickListener, OnItemC
 				{
 					String str = mBinder.getItems(3);
 					mini1_title.setText(str);
+					mini1_title.setSelected(true);
 					mini1_btn.setImageResource(R.drawable.ic_pause);
 					//이미지 처리해야 하는 부분
 					final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");

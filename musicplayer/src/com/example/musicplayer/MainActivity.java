@@ -264,6 +264,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 			{
 				String str = mBinder.getItems(3);
 				mini_title.setText(str);
+				mini_title.setSelected(true);
 				//이미지 처리해야 하는 부분
 				final Uri ArtworkUri =  Uri.parse("content://media/external/audio/albumart");
 				Uri uri = ContentUris.withAppendedId(ArtworkUri, Long.parseLong(mBinder.songsimages()));

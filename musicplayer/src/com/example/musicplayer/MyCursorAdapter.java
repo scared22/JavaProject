@@ -70,20 +70,20 @@ public class MyCursorAdapter extends CursorAdapter {
 			ViewHolder holder = (ViewHolder)view.getTag();
 			String albumArt = null,title=null,songcount=null;
 			//이미지 처리
-			if(jari == 2)
-			{
-				int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
-				albumArt = cursor.getString(albumartIndex);
-				if(getImage(albumArt) != null)
-					holder.album.setImageDrawable(getImage(albumArt));	
-				else
-					holder.album.setImageResource(R.drawable.noimages);
-				title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
-				songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
-			}
+			int albumartIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM_ART);
+			albumArt = cursor.getString(albumartIndex);
+			if(getImage(albumArt) != null)
+				holder.album.setImageDrawable(getImage(albumArt));	
+			else
+				holder.album.setImageResource(R.drawable.noimages);
+			title =  cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+			songcount = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 			//나머지 처리
-			holder.album_title.setText(title);
-			holder.album_artist.setText(songcount);
+			if(title !=null && songcount != null)
+			{
+				holder.album_title.setText(title);
+				holder.album_artist.setText(songcount);
+			}
 		}
 		if(jari == 31)
 		{
