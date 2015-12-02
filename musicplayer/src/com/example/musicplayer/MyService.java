@@ -26,6 +26,7 @@ public class MyService extends Service{
 	int readframe_check=1,bufSize,count=0,end=0;
 	private AudioTrack track;
 	private FileOutputStream os;
+	Cursorquery qr;
 	short[] bytes;
 	IMyServiceCallback mCallback = new IMyServiceCallback.Stub() {
 		@Override
@@ -39,7 +40,6 @@ public class MyService extends Service{
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		//Log.i("superdroid", "start");
-		//Log.d(intent.getAction(), "리모트서비스");
 		if(intent.getAction().equals(Constants.ACTION.START_ACTION))
 			showNotification();
 		if(intent.getAction().equals(Constants.ACTION.MAIN_STOP_ACTION))
@@ -114,9 +114,7 @@ public class MyService extends Service{
 						{
 							try {
 								nextsong();
-							} catch (RemoteException e) {
-								e.printStackTrace();
-							}
+							} catch (RemoteException e) {e.printStackTrace();}
 						}
 					}
 				};
@@ -192,7 +190,6 @@ public class MyService extends Service{
 		}
 		@Override
 		public void changesong(int pos, int updown, int starts) throws RemoteException {
-			Cursorquery qr = new Cursorquery(getApplicationContext());
 			if(starts==1)
 				qr.songlist(pos, updown,option);
 			else if(starts == 2)
@@ -242,6 +239,8 @@ public class MyService extends Service{
 			songimg = bt;
 			songpos = String.valueOf(pos);
 			notich=1;
+			qr = new Cursorquery(getApplicationContext());
+			//qr.shufflesetting(jari);
 		}
 		@Override
 		public boolean singing() throws RemoteException {
@@ -256,6 +255,8 @@ public class MyService extends Service{
 		@Override
 		public void getsongoption(int pos) throws RemoteException {
 			option=pos;
+			if(option==1)
+				qr.shufflesetting(jari);
 		}
 		@Override
 		public int getstart() throws RemoteException {
@@ -309,9 +310,7 @@ public class MyService extends Service{
 	{
 		Notification noti=null;
 		//
-		Intent notificationIntent = new Intent(getApplicationContext(),MainActivity
-				
-				.class);
+		Intent notificationIntent = new Intent(getApplicationContext(),MainActivity.class);
 		notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);

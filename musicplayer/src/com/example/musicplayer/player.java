@@ -126,9 +126,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 						wheres = intent1.getStringExtra("where");
 						mBinder.getwhere(wheres);
 					}
-					MyService.option=0;
-				}
-				
+				}	
 			}
 			else
 				changecheck=0;
@@ -142,7 +140,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				cm=Long.toString(mBinder.current()/60);
 				cs=Long.toString(mBinder.current()%60);	
 				text_current.setText(cm.trim()+":"+cs.trim());
-				mBinder.getsongoption(0);
+				optionpos=mBinder.setsongoption();
 				if(mBinder.playjudge()==false)
 				{
 					btn_play.setImageResource(R.drawable.ic_pause);
@@ -407,7 +405,6 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 			e.printStackTrace();
 		}
 	}
-
 	@Override
     public void onConfigurationChanged(Configuration newConfig) {
               super.onConfigurationChanged(newConfig);
