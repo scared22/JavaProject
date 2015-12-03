@@ -43,6 +43,15 @@
             android:layout_weight="1"
             android:textColor="@drawable/tab_text_selector"
             android:background="@drawable/tab_selector"/>
+
+        <ImageButton
+            android:id="@+id/btn_exit"
+            android:layout_width="20dp"
+            android:layout_height="48dp"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/exit"
+            android:textColor="@drawable/tab_text_selector" />
+
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

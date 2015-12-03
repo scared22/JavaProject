@@ -2,11 +2,13 @@ package com.example.musicplayer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.security.DigestInputStream;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -35,7 +37,7 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	private ViewPager mPager;
 	Button btn_song,btn_artist,btn_album,btn_folder;
-	ImageButton mini_btn;
+	ImageButton mini_btn,btn_exit;
 	ImageView mini_view;
 	TextView mini_title;
 	int Max_PAGE = 4;
@@ -122,6 +124,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		btn_album.setOnClickListener(this);
 		btn_folder = (Button)findViewById(R.id.btn_folder);
 		btn_folder.setOnClickListener(this);
+		btn_exit = (ImageButton)findViewById(R.id.btn_exit);
+		btn_exit.setOnClickListener(this);
 		mPager.setOnPageChangeListener(new OnPageChangeListener() {			
 			@Override
 			public void onPageSelected(int position) {
@@ -224,6 +228,34 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				e.printStackTrace();
 			}
 		}
+		else if(v.getId() == R.id.btn_exit)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("MusicPlayer 종료 대화 상자")
+			.setMessage("앱을 종료 하시 겠습니까?")
+			.setCancelable(false)
+			.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			})
+			.setPositiveButton("확인", new DialogInterface.OnClickListener() {	
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(MyService.IS_SERVICE_RUNNING == true)
+					{
+						Intent it = new Intent(getApplicationContext(),MyService.class);
+						it.setAction(Constants.ACTION.EXIT_ACTION);
+						startService(it);
+					}
+					finish();
+				}
+			});
+			AlertDialog dialog = builder.create();
+			dialog.show();
+		}
+		
 	}
 	private class pagerAdapter extends FragmentPagerAdapter
 	{

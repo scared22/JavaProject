@@ -88,6 +88,11 @@ public class MyService extends Service{
 				e.printStackTrace();
 			}
 		}
+		if(intent.getAction().equals(Constants.ACTION.EXIT_ACTION))
+		{
+			stopForeground(true);
+			stopSelf();
+		}
 		return START_NOT_STICKY;
 	};
 	IMyService.Stub mBinder = new IMyService.Stub() {
