@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class MyService extends Service{
-	int currenttime,temp=1,jari,song_id,startpos,noticount=0;
+	int currenttime,temp=1,jari,song_id;
 	static int option=0;
 	public static int notich=0;
 	 public static boolean IS_SERVICE_RUNNING = false;
@@ -245,7 +245,8 @@ public class MyService extends Service{
 			songpos = String.valueOf(pos);
 			notich=1;
 			qr = new Cursorquery(getApplicationContext());
-			//qr.shufflesetting(jari);
+			qr.allwhere(wherestr);
+			qr.shufflesetting(jari);
 		}
 		@Override
 		public boolean singing() throws RemoteException {

@@ -117,15 +117,16 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					subtitle = intent1.getStringExtra("titles");
 					pos = intent1.getIntExtra("positions", -1);
 					img = intent1.getStringExtra("imgs");
-					mBinder.remotesetting(start, pos, subtitle,img);
-					title.setText(subtitle);
-					title.setSelected(true);
-					playeralbum(img);
 					if((start == 2) || (start == 3) ||(start == 4))
 					{
 						wheres = intent1.getStringExtra("where");
 						mBinder.getwhere(wheres);
 					}
+					mBinder.remotesetting(start, pos, subtitle,img);
+					mBinder.getsongoption(0);
+					title.setText(subtitle);
+					title.setSelected(true);
+					playeralbum(img);
 				}	
 			}
 			else
@@ -178,6 +179,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 				Playerseekbar.setMax(mBinder.musicduration());
 				text_alltime.setText(String.format("%02d:%02d", (int)mBinder.musicduration()/60,(int)mBinder.musicduration()%60));
 				text_current.setText(String.format("%02d:%02d",mBinder.current()/60,mBinder.current()%60));
+				Playerseekbar.setProgress(mBinder.current());
 				servicethread();
 				seekcheck=false;
 				btn_play.setImageResource(R.drawable.ic_pause);
@@ -350,6 +352,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 		}
 		if(v.getId()==R.id.select_option)
 		{
+			Log.d(""+optionpos,"option°ª" );
 			try {
 			if(optionpos == 0)
 				sing_option.setImageResource(R.drawable.unrepet);

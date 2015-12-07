@@ -2,7 +2,6 @@ package com.example.musicplayer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.DigestInputStream;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -25,15 +24,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 public class MainActivity extends FragmentActivity implements OnClickListener{
 	private ViewPager mPager;
 	Button btn_song,btn_artist,btn_album,btn_folder;

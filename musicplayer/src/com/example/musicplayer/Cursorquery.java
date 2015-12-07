@@ -77,7 +77,6 @@ public class Cursorquery {
 			shufflesetting(jari);
 		else if(option == 2)//셔플일때 
 		{
-			//Log.d("현재 셔플곡"+shuffle_pos,"셋팅값"+set);
 			if(shuffle_pos<shuffle_end-1&&set==1)
 				pos = arr.get(++shuffle_pos);
 			else if(shuffle_pos>0 && set==0)
@@ -108,18 +107,28 @@ public class Cursorquery {
 		if(jari == 1)
 			db=cr.query(Audio.Media.EXTERNAL_CONTENT_URI , cursorColumns, null, null, null);
 		if(jari == 2)
+		{
+			selections = new String[]{selections1};
 			db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns,MediaStore.Audio.Media.ALBUM+" LIKE ? ",selections, null);
+		}
 		if(jari == 3)
+		{
+			selections = new String[]{selections1};
 			db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.ARTIST+" LIKE ?", selections, null);
+		}
 		if(jari == 4)
+		{
+			selections = new String[]{selections1};
 			db=cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorColumns, MediaStore.Audio.Media.DATA+" LIKE ?", selections, null);
+		}
 		//셔플 알고리즘
 		shuffle_end = db.getCount();
-		Log.d("노래 총 개수", ""+db.getCount());
 		shuffle_pos=0;	
 		for(int i=0;i<shuffle_end;i++)
 			arr.add(i);
 		Collections.shuffle(arr);
+		for(int i=0;i<shuffle_end;i++)
+			Log.d(""+arr.get(i), "입니다.");
 		db.close();
 	}
 }
