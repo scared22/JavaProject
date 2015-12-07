@@ -350,7 +350,7 @@ public class MyService extends Service{
 	{
 		Notification noti=null;
 		//
-		Intent notificationIntent = new Intent(getApplicationContext(),player.class);
+		Intent notificationIntent = new Intent(getApplicationContext(),MainActivity.class);
 		notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
