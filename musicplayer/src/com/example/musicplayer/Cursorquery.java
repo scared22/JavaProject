@@ -73,8 +73,8 @@ public class Cursorquery {
 			else 
 				pos=0;
 		}
-		else if(option == 1)
-			shufflesetting(jari);
+		//else if(option == 1)
+			//shufflesetting(jari);
 		else if(option == 2)//º≈«√¿œ∂ß 
 		{
 			if(shuffle_pos<shuffle_end-1&&set==1)

@@ -90,8 +90,14 @@ public class MyService extends Service{
 		}
 		if(intent.getAction().equals(Constants.ACTION.EXIT_ACTION))
 		{
+			
+			try {
+				mBinder.pause(mCallback);
+				mBinder.Release();
+			} catch (RemoteException e) {e.printStackTrace();}
 			stopForeground(true);
 			stopSelf();
+			onDestroy();
 		}
 		return START_NOT_STICKY;
 	};
@@ -261,8 +267,8 @@ public class MyService extends Service{
 		@Override
 		public void getsongoption(int pos) throws RemoteException {
 			option=pos;
-			if(option==1)
-				qr.shufflesetting(jari);
+			//if(option==1)
+				//qr.shufflesetting(jari);
 		}
 		@Override
 		public int getstart() throws RemoteException {
