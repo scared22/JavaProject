@@ -240,10 +240,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if(MyService.IS_SERVICE_RUNNING == true)
-					{
+					{	
 						Intent it = new Intent(getApplicationContext(),MyService.class);
 						it.setAction(Constants.ACTION.EXIT_ACTION);
 						startService(it);
+						MyService.IS_SERVICE_RUNNING =false;
 					}
 					finish();
 				}
@@ -281,6 +282,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	@Override
 	public void onDestroy()
 	{
+		unregisterReceiver(receiver);
 		super.onDestroy();
 		Log.d("앱이죽었습니다.", "메인액티비티");
 		unbindService(mConnection);

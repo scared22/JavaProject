@@ -129,8 +129,7 @@ public class player extends Activity implements OnClickListener, OnSeekBarChange
 					playeralbum(img);
 				}	
 			}
-			else
-				changecheck=0;
+			else changecheck=0;
 			if(start!=5)
 			{
 				if(mBinder.PlayingCount()!=0)

@@ -97,6 +97,7 @@ public class Cursorquery {
 		path = db.getString(db.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
 		title = db.getString(db.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
 		img = db.getString(db.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+		db.close();
 	}
 	public void allwhere(String s)
 	{

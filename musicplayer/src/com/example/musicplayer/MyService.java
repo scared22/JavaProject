@@ -90,14 +90,12 @@ public class MyService extends Service{
 		}
 		if(intent.getAction().equals(Constants.ACTION.EXIT_ACTION))
 		{
-			
 			try {
-				mBinder.pause(mCallback);
+				//mBinder.pause(mCallback);
 				mBinder.Release();
 			} catch (RemoteException e) {e.printStackTrace();}
 			stopForeground(true);
 			stopSelf();
-			onDestroy();
 		}
 		return START_NOT_STICKY;
 	};
@@ -296,8 +294,8 @@ public class MyService extends Service{
 	public void onDestroy()
 	{
 		Log.i("superdroid","onDestroy");
-		Intent intent = new Intent("clear");
-		sendBroadcast(intent);		
+		//Intent intent = new Intent("clear");
+		//sendBroadcast(intent);
 		super.onDestroy();
 	}
 	static{System.loadLibrary("ffmpeg");}
